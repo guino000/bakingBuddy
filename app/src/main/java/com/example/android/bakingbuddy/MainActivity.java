@@ -13,16 +13,26 @@ import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
 
 import java.io.IOException;
+import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
     public static final int ID_RECIPE_LOADER = 11;
     public static final String OPERATION_URL_EXTRA = "url_that_returns_json";
+
+    private FlexibleAdapter<IFlexible> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//      TODO: Create and initialize recipe recycler view
+//      TODO: Initialize Flexible Adapter
+
+//        Initialize JSON Loader
         getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
     }
 
