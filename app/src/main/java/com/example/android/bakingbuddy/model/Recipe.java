@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +22,21 @@ public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
     private ArrayList<CookingStep> mSteps;
     private int mServings;
     private String mImagePath;
+    private final RecipeClickHandler mClickHandler;
+
+    public interface RecipeClickHandler{
+        void onClick(Recipe clickedRecipe);
+    }
 
     public Recipe(int id, String name, ArrayList<Ingredient> ingredients,
-                  ArrayList<CookingStep> steps, int servings, String imgPath){
+                  ArrayList<CookingStep> steps, int servings, String imgPath, RecipeClickHandler clickHandler){
         mId = id;
         mName = name;
         mIngredients = ingredients;
         mSteps = steps;
         mServings = servings;
         mImagePath = imgPath;
+        mClickHandler = clickHandler;
     }
 
     public int getId() {
@@ -72,8 +79,7 @@ public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
 
     @Override
     public int getLayoutRes() {
-//        TODO: Make Recipe Item Layout
-        return 0;
+        return R.layout.recipe_miniature;
     }
 
     @Override
@@ -84,16 +90,32 @@ public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
     @Override
     public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, Recipe.RecipeViewHolder holder, int position, List<Object> payloads) {
         holder.mRecipeTitleTextView.setText(mName);
-//        TODO: Load Image View using Picasso
+        if(!"".equals(mImagePath)) {
+            Picasso.get()
+                    .load(mImagePath)
+                    .placeholder(R.drawable.default_placeholder)
+                    .error(R.drawable.default_placeholder)
+                    .into(holder.mRecipeImageView);
+        }else{
+            Picasso.get()
+                    .load(R.drawable.default_placeholder)
+                    .into(holder.mRecipeImageView);
+        }
     }
 
-    public class RecipeViewHolder extends FlexibleViewHolder{
+    public class RecipeViewHolder extends FlexibleViewHolder implements View.OnClickListener{
         public TextView mRecipeTitleTextView;
         public ImageView mRecipeImageView;
 
         public RecipeViewHolder(View view, FlexibleAdapter adapter, boolean stickyHeader) {
             super(view, adapter, stickyHeader);
-//        TODO: Find holder component views on Recipe Item Layout
+            mRecipeTitleTextView = view.findViewById(R.id.tv_recipe_name);
+            mRecipeImageView = view.findViewById(R.id.img_recipe);
+        }
+
+        @Override
+        public void onClick(View view) {
+//            TODO:Implement Onclick method passing the current Recipe
         }
     }
 }

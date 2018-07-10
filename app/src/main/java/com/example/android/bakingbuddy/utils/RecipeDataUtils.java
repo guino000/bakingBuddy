@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public final class RecipeDataUtils {
-    private static final String RECIPES_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 //    Constants for Recipe JSON
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -32,7 +31,7 @@ public final class RecipeDataUtils {
     private static final String KEY_VIDEO_URL = "videoURL";
     private static final String KEY_THUMB_URL = "thumbnailURL";
 
-    public ArrayList<Recipe> getRecipesFromJSON(String recipesJSON){
+    public static ArrayList<Recipe> getRecipesFromJSON(String recipesJSON){
         ArrayList<Recipe> recipes = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(recipesJSON);
@@ -52,7 +51,7 @@ public final class RecipeDataUtils {
         return recipes;
     }
 
-    private ArrayList<Ingredient> getIngredientsFromJSON(String ingredientsJSON){
+    private static  ArrayList<Ingredient> getIngredientsFromJSON(String ingredientsJSON){
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(ingredientsJSON);
@@ -71,7 +70,7 @@ public final class RecipeDataUtils {
         return ingredients;
     }
 
-    private ArrayList<CookingStep> getCookingStepsFromJSON(String stepsJSON){
+    private static  ArrayList<CookingStep> getCookingStepsFromJSON(String stepsJSON){
         ArrayList<CookingStep> cookingSteps = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(stepsJSON);

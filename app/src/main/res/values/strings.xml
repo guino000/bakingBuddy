@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Baking Buddy</string>
+    <string name="recipes_url">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
+    <!--Strings for Recipe Miniature-->
+    <string name="recipe_miniature_dummy_name">Recipe</string>
+    <string name="recipe_image_description">A picture of the recipe</string>
+    
+    <!--Strings for Recipe Details Activity-->
+    <string name="ingredients_label">Ingredients</string>
 </resources>
