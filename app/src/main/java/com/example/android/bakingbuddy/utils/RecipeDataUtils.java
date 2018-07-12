@@ -39,8 +39,8 @@ public final class RecipeDataUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Recipe curRecipe = new Recipe(jsonObject.getInt(KEY_ID),
                         jsonObject.getString(KEY_NAME),
-                        getIngredientsFromJSON(jsonObject.optString(KEY_INGREDIENTS)),
-                        getCookingStepsFromJSON(jsonObject.optString(KEY_STEPS)),
+                        getIngredientsFromJSON(jsonObject.optString(KEY_INGREDIENTS)).toArray(new Ingredient[0]),
+                        getCookingStepsFromJSON(jsonObject.optString(KEY_STEPS)).toArray(new CookingStep[0]),
                         jsonObject.optInt(KEY_SERVINGS),
                         jsonObject.optString(KEY_IMAGE));
                 recipes.add(curRecipe);

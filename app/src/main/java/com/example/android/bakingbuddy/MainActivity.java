@@ -1,6 +1,7 @@
 package com.example.android.bakingbuddy;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -10,22 +11,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.adapters.RecipeFlexibleItem;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> ,
-        Recipe.RecipeClickHandler{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
     public static final int ID_RECIPE_LOADER = 11;
     public static final String OPERATION_URL_EXTRA = "url_that_returns_json";
 
@@ -44,6 +44,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecipeRecyclerView.setAdapter(mAdapter);
         mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecipeRecyclerView.setHasFixedSize(true);
+        FlexibleAdapter.OnItemClickListener clickListener = new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position) {
+                Intent intent = new Intent(view.getContext(), RecipeDetails.class);
+                intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, ((RecipeFlexibleItem) mRecipes.get(position)).getRecipe());
+                startActivity(intent);
+                return true;
+            }
+        };
+        mAdapter.addListener(clickListener);
 //        Initialize recipes dataset
         mRecipes = new ArrayList<>();
 
@@ -100,18 +110,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         if("".equals(data)) return;
         ArrayList<Recipe> parsedRecipes = RecipeDataUtils.getRecipesFromJSON(data);
-        mRecipes.addAll(parsedRecipes);
+        for(Recipe recipe : parsedRecipes){
+            mRecipes.add(new RecipeFlexibleItem(recipe));
+        }
         mAdapter.updateDataSet(mRecipes,true);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
-    }
-
-//    Method for Recipe Click Handling
-    @Override
-    public void onClick(Recipe clickedRecipe) {
-//        TODO:Create an intent to start RecipeDetails passing the clicked recipe as bundle
     }
 }

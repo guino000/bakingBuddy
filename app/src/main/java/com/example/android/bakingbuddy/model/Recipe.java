@@ -1,5 +1,7 @@
 package com.example.android.bakingbuddy.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,28 +17,58 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
-public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
+public class Recipe implements Parcelable{
     private int mId;
     private String mName;
-    private ArrayList<Ingredient> mIngredients;
-    private ArrayList<CookingStep> mSteps;
+    private Ingredient[] mIngredients;
+    private CookingStep[] mSteps;
     private int mServings;
     private String mImagePath;
-    private final RecipeClickHandler mClickHandler;
 
-    public interface RecipeClickHandler{
-        void onClick(Recipe clickedRecipe);
+    protected Recipe(Parcel in) {
+        mId = in.readInt();
+        mName = in.readString();
+        mIngredients = in.createTypedArray(Ingredient.CREATOR);
+        mSteps = in.createTypedArray(CookingStep.CREATOR);
+        mServings = in.readInt();
+        mImagePath = in.readString();
     }
 
-    public Recipe(int id, String name, ArrayList<Ingredient> ingredients,
-                  ArrayList<CookingStep> steps, int servings, String imgPath, RecipeClickHandler clickHandler){
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeTypedArray(mIngredients, flags);
+        dest.writeTypedArray(mSteps, flags);
+        dest.writeInt(mServings);
+        dest.writeString(mImagePath);
+    }
+
+    public Recipe(int id, String name, Ingredient[] ingredients,
+                  CookingStep[] steps, int servings, String imgPath){
         mId = id;
         mName = name;
         mIngredients = ingredients;
         mSteps = steps;
         mServings = servings;
         mImagePath = imgPath;
-        mClickHandler = clickHandler;
     }
 
     public int getId() {
@@ -47,11 +79,11 @@ public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
         return mName;
     }
 
-    public ArrayList<CookingStep> getSteps() {
+    public CookingStep[] getSteps() {
         return mSteps;
     }
 
-    public ArrayList<Ingredient> getIngredients() {
+    public Ingredient[] getIngredients() {
         return mIngredients;
     }
 
@@ -61,61 +93,5 @@ public class Recipe extends AbstractFlexibleItem<Recipe.RecipeViewHolder>{
 
     public String getImagePath() {
         return mImagePath;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof  Recipe){
-            Recipe inRecipe = (Recipe) o;
-            return String.valueOf(this.mId).equals(String.valueOf(inRecipe.getId()));
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return String.valueOf(mId).hashCode();
-    }
-
-    @Override
-    public int getLayoutRes() {
-        return R.layout.recipe_miniature;
-    }
-
-    @Override
-    public Recipe.RecipeViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-        return new RecipeViewHolder(view, adapter, true);
-    }
-
-    @Override
-    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, Recipe.RecipeViewHolder holder, int position, List<Object> payloads) {
-        holder.mRecipeTitleTextView.setText(mName);
-        if(!"".equals(mImagePath)) {
-            Picasso.get()
-                    .load(mImagePath)
-                    .placeholder(R.drawable.default_placeholder)
-                    .error(R.drawable.default_placeholder)
-                    .into(holder.mRecipeImageView);
-        }else{
-            Picasso.get()
-                    .load(R.drawable.default_placeholder)
-                    .into(holder.mRecipeImageView);
-        }
-    }
-
-    public class RecipeViewHolder extends FlexibleViewHolder implements View.OnClickListener{
-        public TextView mRecipeTitleTextView;
-        public ImageView mRecipeImageView;
-
-        public RecipeViewHolder(View view, FlexibleAdapter adapter, boolean stickyHeader) {
-            super(view, adapter, stickyHeader);
-            mRecipeTitleTextView = view.findViewById(R.id.tv_recipe_name);
-            mRecipeImageView = view.findViewById(R.id.img_recipe);
-        }
-
-        @Override
-        public void onClick(View view) {
-//            TODO:Implement Onclick method passing the current Recipe
-        }
     }
 }

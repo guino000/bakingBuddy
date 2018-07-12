@@ -1,5 +1,7 @@
 package com.example.android.bakingbuddy.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +17,7 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
-public class Ingredient extends AbstractFlexibleItem<Ingredient.IngredientViewHolder> {
+public class Ingredient implements Parcelable {
     private int mQuantity;
     private String mMeasure;
     private String mIngredientName;
@@ -25,6 +27,24 @@ public class Ingredient extends AbstractFlexibleItem<Ingredient.IngredientViewHo
         mMeasure = measure;
         mIngredientName = ingredientName;
     }
+
+    protected Ingredient(Parcel in) {
+        mQuantity = in.readInt();
+        mMeasure = in.readString();
+        mIngredientName = in.readString();
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
 
     public int getQuantity() {
         return mQuantity;
@@ -43,36 +63,14 @@ public class Ingredient extends AbstractFlexibleItem<Ingredient.IngredientViewHo
     }
 
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof  Ingredient){
-            Ingredient inIngredient = (Ingredient) o;
-            return (mIngredientName.equals(inIngredient.getIngredientName())
-                && mQuantity == inIngredient.getQuantity() && mMeasure.equals(inIngredient.getMeasure()));
-        }
-        return false;
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public int getLayoutRes() {
-        return R.layout.ingredient_item;
-    }
-
-    @Override
-    public Ingredient.IngredientViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-        return new IngredientViewHolder(view, adapter, true );
-    }
-
-    @Override
-    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, Ingredient.IngredientViewHolder holder, int position, List<Object> payloads) {
-        holder.mIngredientNameTextView.setText(this.getIngredientDescription());
-    }
-
-    public class IngredientViewHolder extends FlexibleViewHolder{
-        public TextView mIngredientNameTextView;
-
-        public IngredientViewHolder(View view, FlexibleAdapter adapter, boolean stickyHeader) {
-            super(view, adapter, stickyHeader);
-            mIngredientNameTextView = view.findViewById(R.id.tv_ingredient_description);
-        }
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mQuantity);
+        dest.writeString(mMeasure);
+        dest.writeString(mIngredientName);
     }
 }
