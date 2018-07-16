@@ -58,7 +58,7 @@ public final class RecipeDataUtils {
             for(int i = 0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Ingredient curIngredient = new Ingredient(
-                        jsonObject.optInt(KEY_SERVINGS),
+                        jsonObject.optInt(KEY_QUANTITY),
                         jsonObject.optString(KEY_MEASURE),
                         jsonObject.optString(KEY_INGREDIENT)
                 );

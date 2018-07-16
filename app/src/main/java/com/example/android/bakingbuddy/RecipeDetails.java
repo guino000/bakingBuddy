@@ -46,8 +46,7 @@ public class RecipeDetails extends AppCompatActivity {
                 mIngredients.add(new IngredientFlexibleItem(ingredient));
             }
             mAdapter.updateDataSet(mIngredients);
-//            TODO: Check why there is only one ingredient showing
-//            TODO: Check why the ingredient quantity is always 0
+//           TODO: Check why the ingredient quantity is always 0
         }
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
