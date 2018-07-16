@@ -7,4 +7,5 @@
     
     <!--Strings for Recipe Details Activity-->
     <string name="ingredients_label">Ingredients</string>
+    <string name="steps_label">Steps</string>
 </resources>
