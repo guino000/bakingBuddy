@@ -2,20 +2,6 @@ package com.example.android.bakingbuddy.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.TextView;
-
-import com.example.android.bakingbuddy.R;
-
-import org.w3c.dom.Text;
-
-import java.util.List;
-
-import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import eu.davidea.flexibleadapter.items.IFlexible;
-import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class Ingredient implements Parcelable {
     private int mQuantity;

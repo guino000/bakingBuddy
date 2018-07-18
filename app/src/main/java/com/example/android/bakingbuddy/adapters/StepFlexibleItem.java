@@ -31,6 +31,10 @@ public class StepFlexibleItem extends AbstractFlexibleItem<StepFlexibleItem.Step
         return false;
     }
 
+    public CookingStep getStep() {
+        return mStep;
+    }
+
     @Override
     public int getLayoutRes() {
         return R.layout.step_miniature;
@@ -44,17 +48,14 @@ public class StepFlexibleItem extends AbstractFlexibleItem<StepFlexibleItem.Step
     @Override
     public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, StepFlexibleItem.StepViewHolder holder, int position, List<Object> payloads) {
         holder.mShortDescriptionTextView.setText(mStep.getShortDescription());
-        holder.mDescriptionTextView.setText(mStep.getDescription());
     }
 
     public class StepViewHolder extends FlexibleViewHolder{
         public TextView mShortDescriptionTextView;
-        public TextView mDescriptionTextView;
 
         public StepViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
             mShortDescriptionTextView = view.findViewById(R.id.tv_step_short_description);
-            mDescriptionTextView = view.findViewById(R.id.tv_step_description);
         }
     }
 }

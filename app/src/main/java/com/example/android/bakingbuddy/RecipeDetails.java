@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.example.android.bakingbuddy.adapters.IngredientFlexibleItem;
 import com.example.android.bakingbuddy.adapters.StepFlexibleItem;
@@ -43,6 +45,7 @@ public class RecipeDetails extends AppCompatActivity {
         mIngredientsRecyclerView.setAdapter(mIngredientsAdapter);
         mIngredientsRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         mIngredientsRecyclerView.setHasFixedSize(true);
+        mIngredientsRecyclerView.setNestedScrollingEnabled(false);
         mIngredients = new ArrayList<>();
 
 //        Initialize Steps Adapter
@@ -51,7 +54,20 @@ public class RecipeDetails extends AppCompatActivity {
         mStepsRecyclerView.setAdapter(mStepsAdapter);
         mStepsRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         mStepsRecyclerView.setHasFixedSize(true);
+        mStepsRecyclerView.setNestedScrollingEnabled(false);
         mSteps = new ArrayList<>();
+
+//        Configure more details click listener
+        FlexibleAdapter.OnItemClickListener clickListener = new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position) {
+                Intent intent = new Intent(view.getContext(),StepDetails.class);
+                intent.putExtra(StepDetails.KEY_INTENT_CLICKED_STEP, ((StepFlexibleItem) mSteps.get(position)).getStep());
+                startActivity(intent);
+                return true;
+            }
+        };
+        mStepsAdapter.addListener(clickListener);
 
         Intent inIntent = getIntent();
         if(inIntent != null){
@@ -71,5 +87,20 @@ public class RecipeDetails extends AppCompatActivity {
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedID = item.getItemId();
+
+        switch (selectedID){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                throw  new UnsupportedOperationException();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

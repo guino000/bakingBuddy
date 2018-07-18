@@ -4,8 +4,9 @@
     <!--Strings for Recipe Miniature-->
     <string name="recipe_miniature_dummy_name">Recipe</string>
     <string name="recipe_image_description">A picture of the recipe</string>
-    
+
     <!--Strings for Recipe Details Activity-->
     <string name="ingredients_label">Ingredients</string>
     <string name="steps_label">Steps</string>
+    <string name="more_details_button_text">More Details</string>
 </resources>
