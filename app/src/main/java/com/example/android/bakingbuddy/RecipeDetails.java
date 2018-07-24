@@ -13,6 +13,10 @@ import com.example.android.bakingbuddy.adapters.StepFlexibleItem;
 import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+
+import net.alexandroid.utils.exoplayerhelper.ExoPlayerHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,16 +74,16 @@ public class RecipeDetails extends AppCompatActivity {
         mStepsAdapter.addListener(clickListener);
 
         Intent inIntent = getIntent();
-        if(inIntent != null){
+        if(inIntent != null) {
             mInRecipe = inIntent.getParcelableExtra(KEY_INTENT_CLICKED_RECIPE);
 //            Update Ingredients
-            for(Ingredient ingredient : mInRecipe.getIngredients()) {
+            for (Ingredient ingredient : mInRecipe.getIngredients()) {
                 mIngredients.add(new IngredientFlexibleItem(ingredient));
             }
             mIngredientsAdapter.updateDataSet(mIngredients);
 
 //            Update Steps
-            for(CookingStep step : mInRecipe.getSteps()) {
+            for (CookingStep step : mInRecipe.getSteps()) {
                 mSteps.add(new StepFlexibleItem(step));
             }
             mStepsAdapter.updateDataSet(mSteps);
