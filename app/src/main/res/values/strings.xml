@@ -7,6 +7,11 @@
 
     <!--Strings for Recipe Details Activity-->
     <string name="ingredients_label">Ingredients</string>
+    <string name="ingredient_miniature_dummy_name">Ingredient</string>
     <string name="steps_label">Steps</string>
     <string name="more_details_button_text">More Details</string>
+
+    <!--String for step detail activity-->
+    <string name="button_text_next">Next</string>
+    <string name="button_text_previous">Previous</string>
 </resources>

@@ -72,6 +72,8 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
             mStep =  inIntent.getParcelableExtra(KEY_INTENT_CLICKED_STEP);
             mStepDescriptionTextView.setText(mStep.getDescription());
             mStepVideoURL = mStep.getVideoUrl();
+            if ("".equals(mStepVideoURL))
+                mStepVideoURL = mStep.getThumbURL();
         }
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
