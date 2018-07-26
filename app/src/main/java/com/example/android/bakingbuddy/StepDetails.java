@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
@@ -39,18 +40,25 @@ import com.google.android.exoplayer2.util.Util;
 
 import net.alexandroid.utils.exoplayerhelper.ExoPlayerHelper;
 
+import java.util.ArrayList;
+
 public class StepDetails extends AppCompatActivity implements ExoPlayer.EventListener{
     private static final String TAG = StepDetails.class.getSimpleName();
     public static final String KEY_INTENT_CLICKED_STEP = "clicked_step";
+    public static final String KEY_INTENT_STEPS_COLLECTION = "step_collection";
 
-    private CookingStep mStep;
+    private int mCurrentPage;
+    private ArrayList<CookingStep> mSteps;
     private TextView mStepDescriptionTextView;
+    private TextView mStepShortDescriptionTextView;
     private PlayerView mPlayerView;
     private SimpleExoPlayer mPlayer;
     private long mPlaybackPosition;
     private int mCurrentWindow;
     private boolean mPlayWhenReady;
     private String mStepVideoURL;
+    private Button mButtonPrevious;
+    private Button mButtonNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,30 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
 
 //        Set member variables
         mStepDescriptionTextView = findViewById(R.id.tv_step_description);
+        mStepShortDescriptionTextView = findViewById(R.id.tv_step_short_description);
+        mButtonPrevious = findViewById(R.id.bt_previous_step);
+        mButtonNext = findViewById(R.id.bt_next_step);
+
+//        Configure Buttons
+        mButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentPage += 1;
+                if(mCurrentPage < mSteps.size()) {
+                    updateUiCurrentStep(mSteps.get(mCurrentPage));
+                }
+            }
+        });
+
+        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentPage -= 1;
+                if(mCurrentPage >= 0) {
+                    updateUiCurrentStep(mSteps.get(mCurrentPage));
+                }
+            }
+        });
 
 //        Initialize ExoPlayer and variables
         mPlayerView = findViewById(R.id.player_step_video);
@@ -69,15 +101,39 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
 //        Get incoming intent
         Intent inIntent = getIntent();
         if(inIntent != null) {
-            mStep =  inIntent.getParcelableExtra(KEY_INTENT_CLICKED_STEP);
-            mStepDescriptionTextView.setText(mStep.getDescription());
-            mStepVideoURL = mStep.getVideoUrl();
-            if ("".equals(mStepVideoURL))
-                mStepVideoURL = mStep.getThumbURL();
+            mSteps =  inIntent.getParcelableArrayListExtra(KEY_INTENT_STEPS_COLLECTION);
+            mCurrentPage = inIntent.getIntExtra(KEY_INTENT_CLICKED_STEP,0);
+            CookingStep currentStep = mSteps.get(mCurrentPage);
+            updateUiCurrentStep(currentStep);
         }
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void updateUiCurrentStep(CookingStep currentStep){
+        mStepDescriptionTextView.setText(currentStep.getDescription());
+        mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
+        mStepVideoURL = currentStep.getVideoUrl();
+        reinitializePlayer(mStepVideoURL);
+        if ("".equals(mStepVideoURL))
+            mStepVideoURL = currentStep.getThumbURL();
+        if(mCurrentPage == mSteps.size() - 1)
+            mButtonNext.setVisibility(View.INVISIBLE);
+        else if(mCurrentPage == 0)
+            mButtonPrevious.setVisibility(View.INVISIBLE);
+        else{
+            mButtonPrevious.setVisibility(View.VISIBLE);
+            mButtonNext.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void reinitializePlayer(String contentURL){
+        releasePlayer();
+        mPlaybackPosition = 0;
+        mCurrentWindow = 0;
+        mPlayWhenReady = false;
+        initializePlayer(contentURL);
     }
 
     private void initializePlayer(String contentURL){

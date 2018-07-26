@@ -66,7 +66,12 @@ public class RecipeDetails extends AppCompatActivity {
             @Override
             public boolean onItemClick(View view, int position) {
                 Intent intent = new Intent(view.getContext(),StepDetails.class);
-                intent.putExtra(StepDetails.KEY_INTENT_CLICKED_STEP, ((StepFlexibleItem) mSteps.get(position)).getStep());
+                ArrayList<CookingStep> steps = new ArrayList<>();
+                for(IFlexible stepFlexibleItem : mSteps) {
+                    steps.add(((StepFlexibleItem) stepFlexibleItem).getStep());
+                }
+                intent.putExtra(StepDetails.KEY_INTENT_STEPS_COLLECTION, steps);
+                intent.putExtra(StepDetails.KEY_INTENT_CLICKED_STEP, position);
                 startActivity(intent);
                 return true;
             }
