@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         if("".equals(data)) return;
+        mRecipes.clear();
         ArrayList<Recipe> parsedRecipes = RecipeDataUtils.getRecipesFromJSON(data);
         for(Recipe recipe : parsedRecipes){
             mRecipes.add(new RecipeFlexibleItem(recipe));

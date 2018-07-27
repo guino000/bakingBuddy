@@ -3,4 +3,5 @@
     <dimen name="recipe_miniature_title_padding">8dp</dimen>
     <dimen name="recipe_miniature_img_height">240dp</dimen>
     <dimen name="card_content_padding">8dp</dimen>
+    <dimen name="video_view_step_detail_height">200dp</dimen>
 </resources>

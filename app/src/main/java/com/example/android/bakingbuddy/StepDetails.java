@@ -144,6 +144,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlayerView.setPlayer(mPlayer);
         mPlayer.setPlayWhenReady(mPlayWhenReady);
         mPlayer.seekTo(mCurrentWindow,mPlaybackPosition);
+        mPlayer.
 
         Uri uri = Uri.parse(contentURL);
         MediaSource mediaSource = buildMediaSource(uri);
