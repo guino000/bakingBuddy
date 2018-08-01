@@ -144,7 +144,6 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlayerView.setPlayer(mPlayer);
         mPlayer.setPlayWhenReady(mPlayWhenReady);
         mPlayer.seekTo(mCurrentWindow,mPlaybackPosition);
-        mPlayer.
 
         Uri uri = Uri.parse(contentURL);
         MediaSource mediaSource = buildMediaSource(uri);
@@ -157,14 +156,14 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         ).createMediaSource(uri);
     }
 
-//    Use for fullscreen
+    //    Use for fullscreen
     private void hideSystemUi(){
         mPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-            | View.SYSTEM_UI_FLAG_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     private void releasePlayer(){
@@ -172,6 +171,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
             mPlaybackPosition = mPlayer.getCurrentPosition();
             mCurrentWindow = mPlayer.getCurrentWindowIndex();
             mPlayWhenReady = mPlayer.getPlayWhenReady();
+            mPlayer.stop();
             mPlayer.release();
             mPlayer = null;
         }
