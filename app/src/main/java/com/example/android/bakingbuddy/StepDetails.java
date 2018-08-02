@@ -1,6 +1,7 @@
 package com.example.android.bakingbuddy;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +47,10 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     private static final String TAG = StepDetails.class.getSimpleName();
     public static final String KEY_INTENT_CLICKED_STEP = "clicked_step";
     public static final String KEY_INTENT_STEPS_COLLECTION = "step_collection";
+    public static final String KEY_STATE_CURRENT_PAGE = "current_page";
+    public static final String KEY_STATE_PLAYBACK_POSITION = "playback_position";
+    public static final String KEY_STATE_PLAY_WHEN_READY = "play_when_ready";
+    public static final String KEY_STATE_CURRENT_WINDOW = "current_window";
 
     private int mCurrentPage;
     private ArrayList<CookingStep> mSteps;
@@ -66,31 +71,36 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         setContentView(R.layout.activity_step_details);
 
 //        Set member variables
-        mStepDescriptionTextView = findViewById(R.id.tv_step_description);
-        mStepShortDescriptionTextView = findViewById(R.id.tv_step_short_description);
-        mButtonPrevious = findViewById(R.id.bt_previous_step);
-        mButtonNext = findViewById(R.id.bt_next_step);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mStepDescriptionTextView = findViewById(R.id.tv_step_description);
+            mStepShortDescriptionTextView = findViewById(R.id.tv_step_short_description);
+            mButtonPrevious = findViewById(R.id.bt_previous_step);
+            mButtonNext = findViewById(R.id.bt_next_step);
 
 //        Configure Buttons
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPage += 1;
-                if(mCurrentPage < mSteps.size()) {
-                    updateUiCurrentStep(mSteps.get(mCurrentPage));
+            mButtonNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCurrentPage += 1;
+                    if (mCurrentPage < mSteps.size()) {
+                        updateUiCurrentStep(mSteps.get(mCurrentPage));
+                    }
                 }
-            }
-        });
+            });
 
-        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPage -= 1;
-                if(mCurrentPage >= 0) {
-                    updateUiCurrentStep(mSteps.get(mCurrentPage));
+            mButtonPrevious.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCurrentPage -= 1;
+                    if (mCurrentPage >= 0) {
+                        updateUiCurrentStep(mSteps.get(mCurrentPage));
+                    }
                 }
-            }
-        });
+            });
+            showSystemUI();
+        }else{
+            hideSystemUi();
+        }
 
 //        Initialize ExoPlayer and variables
         mPlayerView = findViewById(R.id.player_step_video);
@@ -111,24 +121,48 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_STATE_CURRENT_PAGE, mCurrentPage);
+        outState.putLong(KEY_STATE_PLAYBACK_POSITION, mPlaybackPosition);
+        outState.putBoolean(KEY_STATE_PLAY_WHEN_READY, mPlayWhenReady);
+        outState.putInt(KEY_STATE_CURRENT_WINDOW, mCurrentWindow);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPage = savedInstanceState.getInt(KEY_STATE_CURRENT_PAGE);
+        updateUiCurrentStep(mSteps.get(mCurrentPage));
+
+        mPlaybackPosition = savedInstanceState.getLong(KEY_STATE_PLAYBACK_POSITION);
+        mPlayWhenReady = savedInstanceState.getBoolean(KEY_STATE_PLAY_WHEN_READY);
+        mCurrentWindow = savedInstanceState.getInt(KEY_STATE_CURRENT_WINDOW);
+        mPlayer.seekTo(mPlaybackPosition);
+        mPlayer.setPlayWhenReady(mPlayWhenReady);
+    }
+
     private void updateUiCurrentStep(CookingStep currentStep){
-        mStepDescriptionTextView.setText(currentStep.getDescription());
-        mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
         mStepVideoURL = currentStep.getVideoUrl();
-        reinitializePlayer(mStepVideoURL);
         if ("".equals(mStepVideoURL))
             mStepVideoURL = currentStep.getThumbURL();
-        if(mCurrentPage == mSteps.size() - 1)
-            mButtonNext.setVisibility(View.INVISIBLE);
-        else if(mCurrentPage == 0)
-            mButtonPrevious.setVisibility(View.INVISIBLE);
-        else{
-            mButtonPrevious.setVisibility(View.VISIBLE);
-            mButtonNext.setVisibility(View.VISIBLE);
+        reinitializePlayer(mStepVideoURL);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mStepDescriptionTextView.setText(currentStep.getDescription());
+            mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
+            if (mCurrentPage == mSteps.size() - 1)
+                mButtonNext.setVisibility(View.INVISIBLE);
+            else if (mCurrentPage == 0)
+                mButtonPrevious.setVisibility(View.INVISIBLE);
+            else {
+                mButtonPrevious.setVisibility(View.VISIBLE);
+                mButtonNext.setVisibility(View.VISIBLE);
+            }
         }
     }
 
-    private void reinitializePlayer(String contentURL){
+    private void reinitializePlayer(String contentURL) {
         releasePlayer();
         mPlaybackPosition = 0;
         mCurrentWindow = 0;
@@ -158,12 +192,26 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
 
     //    Use for fullscreen
     private void hideSystemUi(){
-        mPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    // Shows the system bars by removing all the flags
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(0);
     }
 
     private void releasePlayer(){
