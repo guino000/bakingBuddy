@@ -134,13 +134,13 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentPage = savedInstanceState.getInt(KEY_STATE_CURRENT_PAGE);
+        updateUiCurrentStep(mSteps.get(mCurrentPage));
+
         mPlaybackPosition = savedInstanceState.getLong(KEY_STATE_PLAYBACK_POSITION);
         mPlayWhenReady = savedInstanceState.getBoolean(KEY_STATE_PLAY_WHEN_READY);
         mCurrentWindow = savedInstanceState.getInt(KEY_STATE_CURRENT_WINDOW);
-
-        CookingStep currentStep = mSteps.get(mCurrentPage);
-        updateUiCurrentStep(currentStep);
-//        TODO: Restore player attributes saved
+        mPlayer.seekTo(mPlaybackPosition);
+        mPlayer.setPlayWhenReady(mPlayWhenReady);
     }
 
     private void updateUiCurrentStep(CookingStep currentStep){
@@ -148,11 +148,9 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         if ("".equals(mStepVideoURL))
             mStepVideoURL = currentStep.getThumbURL();
         reinitializePlayer(mStepVideoURL);
-
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mStepDescriptionTextView.setText(currentStep.getDescription());
             mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
-
             if (mCurrentPage == mSteps.size() - 1)
                 mButtonNext.setVisibility(View.INVISIBLE);
             else if (mCurrentPage == 0)
@@ -164,7 +162,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         }
     }
 
-    private void reinitializePlayer(String contentURL){
+    private void reinitializePlayer(String contentURL) {
         releasePlayer();
         mPlaybackPosition = 0;
         mCurrentWindow = 0;
