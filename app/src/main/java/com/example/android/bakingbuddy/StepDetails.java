@@ -47,6 +47,10 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     private static final String TAG = StepDetails.class.getSimpleName();
     public static final String KEY_INTENT_CLICKED_STEP = "clicked_step";
     public static final String KEY_INTENT_STEPS_COLLECTION = "step_collection";
+    public static final String KEY_STATE_CURRENT_PAGE = "current_page";
+    public static final String KEY_STATE_PLAYBACK_POSITION = "playback_position";
+    public static final String KEY_STATE_PLAY_WHEN_READY = "play_when_ready";
+    public static final String KEY_STATE_CURRENT_WINDOW = "current_window";
 
     private int mCurrentPage;
     private ArrayList<CookingStep> mSteps;
@@ -93,6 +97,9 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
                     }
                 }
             });
+            showSystemUI();
+        }else{
+            hideSystemUi();
         }
 
 //        Initialize ExoPlayer and variables
@@ -112,6 +119,28 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_STATE_CURRENT_PAGE, mCurrentPage);
+        outState.putLong(KEY_STATE_PLAYBACK_POSITION, mPlaybackPosition);
+        outState.putBoolean(KEY_STATE_PLAY_WHEN_READY, mPlayWhenReady);
+        outState.putInt(KEY_STATE_CURRENT_WINDOW, mCurrentWindow);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPage = savedInstanceState.getInt(KEY_STATE_CURRENT_PAGE);
+        mPlaybackPosition = savedInstanceState.getLong(KEY_STATE_PLAYBACK_POSITION);
+        mPlayWhenReady = savedInstanceState.getBoolean(KEY_STATE_PLAY_WHEN_READY);
+        mCurrentWindow = savedInstanceState.getInt(KEY_STATE_CURRENT_WINDOW);
+
+        CookingStep currentStep = mSteps.get(mCurrentPage);
+        updateUiCurrentStep(currentStep);
+//        TODO: Restore player attributes saved
     }
 
     private void updateUiCurrentStep(CookingStep currentStep){
@@ -182,13 +211,9 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     }
 
     // Shows the system bars by removing all the flags
-    // except for the ones that make the content appear under the system bars.
     private void showSystemUI() {
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        decorView.setSystemUiVisibility(0);
     }
 
     private void releasePlayer(){
