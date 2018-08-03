@@ -14,4 +14,6 @@
     <!--String for step detail activity-->
     <string name="button_text_next">Next</string>
     <string name="button_text_previous">Previous</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

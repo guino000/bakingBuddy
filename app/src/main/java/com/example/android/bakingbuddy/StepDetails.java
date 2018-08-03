@@ -147,7 +147,8 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mStepVideoURL = currentStep.getVideoUrl();
         if ("".equals(mStepVideoURL))
             mStepVideoURL = currentStep.getThumbURL();
-        reinitializePlayer(mStepVideoURL);
+        if(!"".equals(mStepVideoURL))
+            reinitializePlayer(mStepVideoURL);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mStepDescriptionTextView.setText(currentStep.getDescription());
             mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
@@ -219,7 +220,6 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
             mPlaybackPosition = mPlayer.getCurrentPosition();
             mCurrentWindow = mPlayer.getCurrentWindowIndex();
             mPlayWhenReady = mPlayer.getPlayWhenReady();
-            mPlayer.stop();
             mPlayer.release();
             mPlayer = null;
         }
@@ -243,17 +243,17 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
-        if(Util.SDK_INT > 23){
+        if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
-        if(Util.SDK_INT > 23){
+        if (Util.SDK_INT > 23) {
             releasePlayer();
         }
     }
