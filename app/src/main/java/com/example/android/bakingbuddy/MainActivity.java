@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+//        TODO: If it's a wide screen, the layout manager should be grid
 //        Initialize recycler view
         mRecipeRecyclerView = findViewById(R.id.rv_recipes);
         mAdapter = new FlexibleAdapter<>(mRecipes);

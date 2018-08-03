@@ -1,5 +1,6 @@
 package com.example.android.bakingbuddy;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class RecipeDetails extends AppCompatActivity {
     private RecyclerView mStepsRecyclerView;
     private FlexibleAdapter<IFlexible> mStepsAdapter;
     private List<IFlexible> mSteps;
+    private StepDetailFragment mStepDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +67,18 @@ public class RecipeDetails extends AppCompatActivity {
         FlexibleAdapter.OnItemClickListener clickListener = new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(View view, int position) {
-                Intent intent = new Intent(view.getContext(),StepDetails.class);
-                ArrayList<CookingStep> steps = new ArrayList<>();
-                for(IFlexible stepFlexibleItem : mSteps) {
-                    steps.add(((StepFlexibleItem) stepFlexibleItem).getStep());
+                if(findViewById(R.id.step_detail_container) == null) {
+                    Intent intent = new Intent(view.getContext(), StepDetails.class);
+                    ArrayList<CookingStep> steps = new ArrayList<>();
+                    for (IFlexible stepFlexibleItem : mSteps) {
+                        steps.add(((StepFlexibleItem) stepFlexibleItem).getStep());
+                    }
+                    intent.putExtra(StepDetails.KEY_INTENT_STEPS_COLLECTION, steps);
+                    intent.putExtra(StepDetails.KEY_INTENT_CLICKED_STEP, position);
+                    startActivity(intent);
+                }else{
+                    mStepDetailFragment.updateUiCurrentStep(position);
                 }
-                intent.putExtra(StepDetails.KEY_INTENT_STEPS_COLLECTION, steps);
-                intent.putExtra(StepDetails.KEY_INTENT_CLICKED_STEP, position);
-                startActivity(intent);
                 return true;
             }
         };
@@ -92,6 +98,25 @@ public class RecipeDetails extends AppCompatActivity {
                 mSteps.add(new StepFlexibleItem(step));
             }
             mStepsAdapter.updateDataSet(mSteps);
+        }
+
+//        Configure Fragment if is a large view
+//        Check if layout is two pane mode
+        if(findViewById(R.id.step_detail_container) != null){
+//            TODO: Get a reference to fragment when instance state is not null
+            if(savedInstanceState == null) {
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                //            Create new Step Detail Fragment
+                ArrayList<CookingStep> steps = new ArrayList<>();
+                for (IFlexible stepFlexibleItem : mSteps) {
+                    steps.add(((StepFlexibleItem) stepFlexibleItem).getStep());
+                }
+                mStepDetailFragment = StepDetailFragment.newInstance(
+                        steps, 0);
+                fragmentManager.beginTransaction()
+                        .add(R.id.step_detail_container, mStepDetailFragment)
+                        .commit();
+            }
         }
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
