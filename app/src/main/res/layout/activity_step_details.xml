@@ -7,10 +7,74 @@
     tools:context=".StepDetails">
 
     <LinearLayout
+        android:id="@+id/linear_layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="5"
+        app:layout_constraintBottom_toTopOf="@+id/linear_layout_buttons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/player_step_video"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/black"
+            android:layout_weight="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:resize_mode="fit"
+            app:shutter_background_color="@android:color/transparent"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:contentPadding="@dimen/card_content_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_step_video">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_step_short_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="TextView" />
+
+                <TextView
+                    android:id="@+id/tv_step_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    app:layout_constraintStart_toStartOf="@+id/tv_step_short_description"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_step_short_description"
+                    tools:text="TextView" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/primaryColor"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -23,8 +87,8 @@
             android:layout_weight="1"
             android:text="@string/button_text_previous"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
-            app:layout_constraintStart_toStartOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+            app:layout_constraintStart_toStartOf="@+id/card_view_description"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_description" />
 
         <Button
             android:id="@+id/bt_next_step"
@@ -32,60 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
             android:text="@string/button_text_next"
-            app:layout_constraintEnd_toEndOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+            app:layout_constraintEnd_toEndOf="@+id/card_view_description"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_description" />
     </LinearLayout>
-
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/player_step_video"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/video_view_step_detail_height"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:resize_mode="fit"
-        android:background="@android:color/black"
-        app:shutter_background_color="@android:color/transparent"/>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:contentPadding="@dimen/card_content_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_step_video">
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tv_step_short_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                tools:text="TextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_step_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintStart_toStartOf="@+id/tv_step_short_description"
-                app:layout_constraintTop_toBottomOf="@+id/tv_step_short_description"
-                tools:text="TextView" />
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

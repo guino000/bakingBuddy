@@ -103,7 +103,6 @@ public class RecipeDetails extends AppCompatActivity {
 //        Configure Fragment if is a large view
 //        Check if layout is two pane mode
         if(findViewById(R.id.step_detail_container) != null){
-//            TODO: Get a reference to fragment when instance state is not null
             if(savedInstanceState == null) {
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 //            Create new Step Detail Fragment
@@ -116,6 +115,8 @@ public class RecipeDetails extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .add(R.id.step_detail_container, mStepDetailFragment)
                         .commit();
+            }else{
+                mStepDetailFragment = (StepDetailFragment) getSupportFragmentManager().findFragmentById(R.id.step_detail_container);
             }
         }
 

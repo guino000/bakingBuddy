@@ -35,7 +35,6 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 
 public class StepDetailFragment extends Fragment implements Player.EventListener{
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM_CLICKED_STEP = "clicked_step";
     private static final String ARG_PARAM_STEPS_COLLECTION = "step_collection";
@@ -44,7 +43,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public static final String KEY_STATE_PLAY_WHEN_READY = "play_when_ready";
     public static final String KEY_STATE_CURRENT_WINDOW = "current_window";
 
-    // TODO: Rename and change types of parameters
     private int mCurrentPage;
     private ArrayList<CookingStep> mSteps;
     private TextView mStepDescriptionTextView;
@@ -55,8 +53,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     private int mCurrentWindow;
     private boolean mPlayWhenReady;
     private String mStepVideoURL;
-    private Button mButtonPrevious;
-    private Button mButtonNext;
 
     public StepDetailFragment() {
         // Required empty public constructor
@@ -70,7 +66,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
      * @param clickedStep Parame0ter 2.
      * @return A new instance of fragment StepDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static StepDetailFragment newInstance(ArrayList<CookingStep> cookingSteps, int clickedStep) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
@@ -101,29 +96,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 //        Set member variables
         mStepDescriptionTextView = view.findViewById(R.id.tv_step_description);
         mStepShortDescriptionTextView = view.findViewById(R.id.tv_step_short_description);
-        mButtonPrevious = view.findViewById(R.id.bt_previous_step);
-        mButtonNext = view.findViewById(R.id.bt_next_step);
-
-//        Configure Buttons
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPage += 1;
-                if (mCurrentPage < mSteps.size()) {
-                    updateUiCurrentStep(mCurrentPage);
-                }
-            }
-        });
-
-        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPage -= 1;
-                if (mCurrentPage >= 0) {
-                    updateUiCurrentStep(mCurrentPage);
-                }
-            }
-        });
 
         //        Initialize ExoPlayer and variables
         mPlayerView = view.findViewById(R.id.player_step_video);
@@ -173,14 +145,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             reinitializePlayer(mStepVideoURL);
         mStepDescriptionTextView.setText(currentStep.getDescription());
         mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
-        if (mCurrentPage == mSteps.size() - 1)
-            mButtonNext.setVisibility(View.INVISIBLE);
-        else if (mCurrentPage == 0)
-            mButtonPrevious.setVisibility(View.INVISIBLE);
-        else {
-            mButtonPrevious.setVisibility(View.VISIBLE);
-            mButtonNext.setVisibility(View.VISIBLE);
-        }
         mCurrentPage = page;
     }
 

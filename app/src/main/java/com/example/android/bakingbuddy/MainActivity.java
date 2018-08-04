@@ -9,9 +9,12 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.adapters.RecipeFlexibleItem;
@@ -37,12 +40,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        TODO: If it's a wide screen, the layout manager should be grid
 //        Initialize recycler view
         mRecipeRecyclerView = findViewById(R.id.rv_recipes);
         mAdapter = new FlexibleAdapter<>(mRecipes);
         mRecipeRecyclerView.setAdapter(mAdapter);
-        mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        if(getResources().getConfiguration().screenWidthDp < 600)
+            mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+                    LinearLayoutManager.VERTICAL, false));
+        else {
+            mRecipeRecyclerView.setLayoutManager(new GridLayoutManager(this,
+                    1, GridLayoutManager.VERTICAL, false));
+            ViewTreeObserver viewTreeObserver = mRecipeRecyclerView.getViewTreeObserver();
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    calculateSize();
+                }
+            });
+        }
         mRecipeRecyclerView.setHasFixedSize(true);
         FlexibleAdapter.OnItemClickListener clickListener = new FlexibleAdapter.OnItemClickListener() {
             @Override
@@ -60,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        Initialize JSON Loader and load data
         getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
         loadRecipes(getString(R.string.recipes_url));
+    }
+
+    private void calculateSize() {
+        int spanCount = (int) Math.floor(mRecipeRecyclerView.getWidth() /
+                getResources().getDimension(R.dimen.recipe_miniature_width));
+        ((GridLayoutManager) mRecipeRecyclerView.getLayoutManager()).setSpanCount(spanCount);
     }
 
 //    Function to load recipes from WEB
