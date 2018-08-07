@@ -147,8 +147,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mStepVideoURL = currentStep.getVideoUrl();
         if ("".equals(mStepVideoURL))
             mStepVideoURL = currentStep.getThumbURL();
-        if(!"".equals(mStepVideoURL))
-            reinitializePlayer(mStepVideoURL);
+        reinitializePlayer(mStepVideoURL);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mStepDescriptionTextView.setText(currentStep.getDescription());
             mStepShortDescriptionTextView.setText(currentStep.getShortDescription());
@@ -168,7 +167,8 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlaybackPosition = 0;
         mCurrentWindow = 0;
         mPlayWhenReady = false;
-        initializePlayer(contentURL);
+        if(!"".equals(contentURL))
+            initializePlayer(contentURL);
     }
 
     private void initializePlayer(String contentURL){
@@ -183,6 +183,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         Uri uri = Uri.parse(contentURL);
         MediaSource mediaSource = buildMediaSource(uri);
         mPlayer.prepare(mediaSource,true,false);
+        mPlayerView.getVideoSurfaceView().setVisibility(View.VISIBLE);
     }
 
     private MediaSource buildMediaSource(Uri uri){
@@ -222,6 +223,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mPlayer.release();
             mPlayer = null;
+            mPlayerView.getVideoSurfaceView().setVisibility(View.GONE);
         }
     }
 
@@ -237,7 +239,7 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
     protected void onResume() {
         super.onResume();
 //        hideSystemUi();
-        if((Util.SDK_INT <= 23 && !"".equals(mStepVideoURL))){
+        if((Util.SDK_INT <= 23 && mPlayer == null && !"".equals(mStepVideoURL))){
             initializePlayer(mStepVideoURL);
         }
     }

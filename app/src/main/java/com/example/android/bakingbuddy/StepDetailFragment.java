@@ -168,6 +168,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         Uri uri = Uri.parse(contentURL);
         MediaSource mediaSource = buildMediaSource(uri);
         mPlayer.prepare(mediaSource,true,false);
+        mPlayerView.getVideoSurfaceView().setVisibility(View.VISIBLE);
     }
 
     private MediaSource buildMediaSource(Uri uri){
@@ -183,6 +184,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mPlayer.release();
             mPlayer = null;
+            mPlayerView.getVideoSurfaceView().setVisibility(View.GONE);
         }
     }
 
