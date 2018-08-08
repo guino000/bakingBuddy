@@ -1,0 +1,38 @@
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+
+     <TextView
+         android:id="@+id/tv_widget_ingredients_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="8dp"
+         android:contentDescription="@string/ingredients_label"
+         android:text="@string/ingredients_label"
+         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <ListView
+        android:id="@+id/lv_widget_ingredients"
+        style="@style/Widget.AppCompat.Light.ListView.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+     <TextView
+         android:id="@+id/tv_widget_steps_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="8dp"
+         android:contentDescription="@string/steps_label"
+         android:text="@string/steps_label"
+         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+     <ListView
+         android:id="@+id/lv_widget_steps"
+         style="@style/Widget.AppCompat.Light.ListView.DropDown"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content" />
+
+</LinearLayout>
