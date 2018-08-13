@@ -45,4 +45,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'net.alexandroid.utils:exoplayerhelper:2.15'
+//    Schematic
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.3'
+    implementation 'net.simonvt.schematic:schematic:0.6.3'
 }
