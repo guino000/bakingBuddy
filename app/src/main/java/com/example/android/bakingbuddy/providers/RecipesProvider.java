@@ -20,7 +20,7 @@ public final class RecipesProvider {
                 path = "recipes",
                 type = "vnd.android.cursor.dir/recipe",
                 defaultSort = RecipeListColumns.TITLE + " ASC")
-        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/lists");
+        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/recipes");
 
         @InexactContentUri(
                 path = Path.RECIPES + "/#",

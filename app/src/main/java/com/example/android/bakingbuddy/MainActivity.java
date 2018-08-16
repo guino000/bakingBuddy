@@ -2,6 +2,7 @@ package com.example.android.bakingbuddy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -16,6 +17,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.example.android.bakingbuddy.adapters.RecipeAdapter;
+import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
+import com.example.android.bakingbuddy.loaders.RecipeCursorLoader;
 import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.adapters.RecipeFlexibleItem;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
@@ -28,13 +32,17 @@ import java.util.List;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
-    public static final int ID_RECIPE_LOADER = 11;
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<String>,
+        RecipeAdapter.RecipeAdapterOnClickHandler,
+        AsyncTaskDelegate<Cursor>{
+    public static final int ID_RECIPE_JSON_LOADER = 11;
+    public static final int ID_RECIPE_CURSOR_LOADER = 12;
     public static final String OPERATION_URL_EXTRA = "url_that_returns_json";
 
     private RecyclerView mRecipeRecyclerView;
-    private FlexibleAdapter<IFlexible> mAdapter;
-    private List<IFlexible> mRecipes;
+    private RecipeAdapter mAdapter;
+    private RecipeCursorLoader mRecipeLoaderCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 //        Initialize recycler view
         mRecipeRecyclerView = findViewById(R.id.rv_recipes);
-        mAdapter = new FlexibleAdapter<>(mRecipes);
+        mAdapter = new RecipeAdapter(this);
         mRecipeRecyclerView.setAdapter(mAdapter);
         if(getResources().getConfiguration().screenWidthDp < 600)
             mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(this,
@@ -59,21 +67,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             });
         }
         mRecipeRecyclerView.setHasFixedSize(true);
-        FlexibleAdapter.OnItemClickListener clickListener = new FlexibleAdapter.OnItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position) {
-                Intent intent = new Intent(view.getContext(), RecipeDetails.class);
-                intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, ((RecipeFlexibleItem) mRecipes.get(position)).getRecipe());
-                startActivity(intent);
-                return true;
-            }
-        };
-        mAdapter.addListener(clickListener);
-//        Initialize recipes dataset
-        mRecipes = new ArrayList<>();
 
 //        Initialize JSON Loader and load data
-        getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
+        getSupportLoaderManager().initLoader(ID_RECIPE_JSON_LOADER, null, this);
+        mRecipeLoaderCallbacks = new RecipeCursorLoader(this, this,mAdapter);
         loadRecipes(getString(R.string.recipes_url));
     }
 
@@ -140,6 +137,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
+
+    }
+
+    @Override
+    public void onClick(int position) {
+        Intent intent = new Intent(this, RecipeDetails.class);
+        intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, position);
+        startActivity(intent);
+    }
+
+    @Override
+    public void processFinish(Cursor output, android.content.Loader<Cursor> callerLoader) {
 
     }
 }

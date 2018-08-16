@@ -1,10 +1,12 @@
 package com.example.android.bakingbuddy.utils;
 
+import android.database.Cursor;
 import android.util.JsonReader;
 
 import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.providers.RecipeListColumns;
 
 import org.json.JSONArray;
 import org.json.JSONException;

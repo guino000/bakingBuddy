@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.android.bakingbuddy.adapters.RecipeAdapter;
 import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
 
@@ -20,10 +21,10 @@ public class RecipeCursorLoader implements LoaderManager.LoaderCallbacks<Cursor>
     public static final String ARG_RECIPE_ID = "recipe_id";
 
     private Context mContext;
-    private FlexibleAdapter<IFlexible> mAdapter;
+    private RecipeAdapter mAdapter;
     private AsyncTaskDelegate<Cursor> mDelegate;
 
-    public RecipeCursorLoader(Context context, AsyncTaskDelegate<Cursor> delegate, FlexibleAdapter<IFlexible> adapter){
+    public RecipeCursorLoader(Context context, AsyncTaskDelegate<Cursor> delegate, RecipeAdapter adapter){
         mContext = context;
         mDelegate = delegate;
         mAdapter = adapter;
@@ -54,8 +55,6 @@ public class RecipeCursorLoader implements LoaderManager.LoaderCallbacks<Cursor>
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-//        TODO: Come up with a way to extend flexibleadapter and create a cursor adapter
-//        TODO: Call swapcursor on adapter passing a null cursor
-//        mAdapter.swapCursor(null);
+        mAdapter.swapCursor(null);
     }
 }
