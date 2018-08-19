@@ -37,6 +37,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.example.android.bakingbuddy"
+            android:name=".providers.generated.RecipesProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.android.bakingbuddy.utils;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.JsonReader;
 
@@ -7,6 +8,7 @@ import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.providers.RecipeListColumns;
+import com.example.android.bakingbuddy.providers.RecipesDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,5 +93,17 @@ public final class RecipeDataUtils {
             e.printStackTrace();
         }
         return cookingSteps;
+    }
+
+    public static ContentValues[] getRecipeContentValuesFromList(ArrayList<Recipe> recipeArrayList){
+        ContentValues[] contentValues = new ContentValues[recipeArrayList.size()];
+        for(int i = 0; i< recipeArrayList.size(); i++) {
+            ContentValues currentValues = new ContentValues();
+            currentValues.put(RecipeListColumns.TITLE, recipeArrayList.get(i).getName());
+            currentValues.put(RecipeListColumns.SERVINGS, recipeArrayList.get(i).getServings());
+            currentValues.put(RecipeListColumns.IMAGE_URL, recipeArrayList.get(i).getImagePath());
+            contentValues[i] = currentValues;
+        }
+        return contentValues;
     }
 }

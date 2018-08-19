@@ -12,15 +12,15 @@ public final class RecipesProvider {
     public static final String AUTHORITY = "com.example.android.bakingbuddy.RecipesProvider";
 
     interface Path{
-        String RECIPES = "recipes";
+        String RECIPES = "recipe";
     }
 
     @TableEndpoint(table = RecipesDatabase.RECIPES) public static class Recipes {
         @ContentUri(
-                path = "recipes",
+                path = Path.RECIPES,
                 type = "vnd.android.cursor.dir/recipe",
                 defaultSort = RecipeListColumns.TITLE + " ASC")
-        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/recipes");
+        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/recipe");
 
         @InexactContentUri(
                 path = Path.RECIPES + "/#",
@@ -29,7 +29,7 @@ public final class RecipesProvider {
                 whereColumn = RecipeListColumns._ID,
                 pathSegment = 1)
         public static Uri withId(long id){
-            return Uri.parse("content://" + AUTHORITY + "/recipes/" + id);
+            return Uri.parse("content://" + AUTHORITY + "/recipe/" + id);
         }
     }
 }

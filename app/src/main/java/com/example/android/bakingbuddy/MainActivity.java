@@ -1,6 +1,7 @@
 package com.example.android.bakingbuddy;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
@@ -19,9 +20,12 @@ import android.view.ViewTreeObserver;
 
 import com.example.android.bakingbuddy.adapters.RecipeAdapter;
 import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
+import com.example.android.bakingbuddy.loaders.RecipeAsyncLoader;
 import com.example.android.bakingbuddy.loaders.RecipeCursorLoader;
 import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.adapters.RecipeFlexibleItem;
+import com.example.android.bakingbuddy.providers.RecipesDatabase;
+import com.example.android.bakingbuddy.providers.RecipesProvider;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
@@ -33,16 +37,14 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<String>,
-        RecipeAdapter.RecipeAdapterOnClickHandler,
-        AsyncTaskDelegate<Cursor>{
+        RecipeAdapter.RecipeAdapterOnClickHandler{
     public static final int ID_RECIPE_JSON_LOADER = 11;
     public static final int ID_RECIPE_CURSOR_LOADER = 12;
-    public static final String OPERATION_URL_EXTRA = "url_that_returns_json";
 
     private RecyclerView mRecipeRecyclerView;
     private RecipeAdapter mAdapter;
-    private RecipeCursorLoader mRecipeLoaderCallbacks;
+    private RecipeAsyncLoader mRecipeJSONLoaderCallbacks;
+    private RecipeCursorLoader mRecipeCursorLoaderCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +70,35 @@ public class MainActivity extends AppCompatActivity implements
         }
         mRecipeRecyclerView.setHasFixedSize(true);
 
-//        Initialize JSON Loader and load data
-        getSupportLoaderManager().initLoader(ID_RECIPE_JSON_LOADER, null, this);
-        mRecipeLoaderCallbacks = new RecipeCursorLoader(this, this,mAdapter);
-        loadRecipes(getString(R.string.recipes_url));
+//        Initialize loaders and load data
+        mRecipeJSONLoaderCallbacks = new RecipeAsyncLoader(this, new AsyncTaskDelegate<String>() {
+            @Override
+            public void processFinish(String output, Loader<String> callerLoader) {
+                if(output == null || output.equals(""))
+                    return;
+
+//              Removes old data from database
+//                getContentResolver().delete(RecipesProvider.Recipes.RECIPES, null, null);
+
+//              Insert new data on database
+                ArrayList<Recipe> recipesFromJSON = RecipeDataUtils.getRecipesFromJSON(output);
+                ContentValues[] recipeValues = RecipeDataUtils.getRecipeContentValuesFromList(recipesFromJSON);
+                getContentResolver().bulkInsert(RecipesProvider.Recipes.RECIPES, recipeValues);
+
+//                Query new data
+                loadRecipesCursor();
+            }
+        });
+
+        mRecipeCursorLoaderCallbacks = new RecipeCursorLoader(this, mAdapter, new AsyncTaskDelegate<Cursor>() {
+            @Override
+            public void processFinish(Cursor output, Loader<Cursor> callerLoader) {
+                mAdapter.swapCursor(output);
+            }
+        });
+        getSupportLoaderManager().initLoader(ID_RECIPE_JSON_LOADER, null, mRecipeJSONLoaderCallbacks);
+        getSupportLoaderManager().initLoader(ID_RECIPE_CURSOR_LOADER, null, mRecipeCursorLoaderCallbacks);
+        loadRecipesJSON(getString(R.string.recipes_url));
     }
 
     private void calculateSize() {
@@ -81,63 +108,29 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 //    Function to load recipes from WEB
-    public void loadRecipes(String url){
+    public void loadRecipesJSON(String url){
+        LoaderManager.LoaderCallbacks callbacks = mRecipeJSONLoaderCallbacks;
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(OPERATION_URL_EXTRA, url);
+        queryBundle.putString(RecipeAsyncLoader.KEY_ARG_CONTENT_URL, url);
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> loader = loaderManager.getLoader(ID_RECIPE_LOADER);
+        Loader<String> loader = loaderManager.getLoader(ID_RECIPE_JSON_LOADER);
         if(loader==null){
-            loaderManager.initLoader(ID_RECIPE_LOADER,queryBundle,this);
+            loaderManager.initLoader(ID_RECIPE_JSON_LOADER,queryBundle, mRecipeJSONLoaderCallbacks);
         }else{
-            loaderManager.restartLoader(ID_RECIPE_LOADER,queryBundle,this);
+            loaderManager.restartLoader(ID_RECIPE_JSON_LOADER,queryBundle,mRecipeJSONLoaderCallbacks);
         }
     }
 
-//    Recipe Async Task Loader Callbacks
-    @SuppressLint("StaticFieldLeak")
-    @NonNull
-    @Override
-    public Loader<String> onCreateLoader(int id, @Nullable final Bundle args) {
-        return new AsyncTaskLoader<String>(this) {
-            @Nullable
-            @Override
-            public String loadInBackground() {
-//                Get URL and check if its null
-                String url = args.getString(OPERATION_URL_EXTRA);
-                if(url != null && "".equals(url)){
-                    return "";
-                }
-
-                String operationResultString="";
-                try{
-                    operationResultString = NetworkUtils.getResponseFromHttpUrl(url);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-                return operationResultString;
-            }
-
-            @Override
-            protected void onStartLoading() {
-                forceLoad();
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        if("".equals(data)) return;
-        mRecipes.clear();
-        ArrayList<Recipe> parsedRecipes = RecipeDataUtils.getRecipesFromJSON(data);
-        for(Recipe recipe : parsedRecipes){
-            mRecipes.add(new RecipeFlexibleItem(recipe));
+    //    Function to load recipes from Database
+    public void loadRecipesCursor(){
+        LoaderManager.LoaderCallbacks callbacks = mRecipeCursorLoaderCallbacks;
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> loader = loaderManager.getLoader(ID_RECIPE_CURSOR_LOADER);
+        if(loader==null){
+            loaderManager.initLoader(ID_RECIPE_CURSOR_LOADER,null, mRecipeJSONLoaderCallbacks);
+        }else{
+            loaderManager.restartLoader(ID_RECIPE_CURSOR_LOADER,null,mRecipeJSONLoaderCallbacks);
         }
-        mAdapter.updateDataSet(mRecipes,true);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
-
     }
 
     @Override
@@ -145,10 +138,5 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, RecipeDetails.class);
         intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, position);
         startActivity(intent);
-    }
-
-    @Override
-    public void processFinish(Cursor output, android.content.Loader<Cursor> callerLoader) {
-
     }
 }

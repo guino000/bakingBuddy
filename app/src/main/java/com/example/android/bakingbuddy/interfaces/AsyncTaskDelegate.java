@@ -12,5 +12,5 @@ import android.support.v4.content.Loader;
  ***************************************************************************************/
 
 public interface AsyncTaskDelegate<T> {
-    void processFinish(Cursor output, android.content.Loader<Cursor> callerLoader);
+    void processFinish(T output, Loader<T> callerLoader);
 }
