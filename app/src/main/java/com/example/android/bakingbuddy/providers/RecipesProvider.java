@@ -9,10 +9,10 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 
 @ContentProvider(authority = RecipesProvider.AUTHORITY, database = RecipesDatabase.class)
 public final class RecipesProvider {
-    public static final String AUTHORITY = "com.example.android.bakingbuddy.RecipesProvider";
+    public static final String AUTHORITY = "com.example.android.bakingbuddy";
 
     interface Path{
-        String RECIPES = "recipe";
+        String RECIPES = "recipes";
     }
 
     @TableEndpoint(table = RecipesDatabase.RECIPES) public static class Recipes {
@@ -20,7 +20,7 @@ public final class RecipesProvider {
                 path = Path.RECIPES,
                 type = "vnd.android.cursor.dir/recipe",
                 defaultSort = RecipeListColumns.TITLE + " ASC")
-        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/recipe");
+        public static final Uri RECIPES = Uri.parse("content://" + AUTHORITY + "/" + Path.RECIPES);
 
         @InexactContentUri(
                 path = Path.RECIPES + "/#",
@@ -29,7 +29,7 @@ public final class RecipesProvider {
                 whereColumn = RecipeListColumns._ID,
                 pathSegment = 1)
         public static Uri withId(long id){
-            return Uri.parse("content://" + AUTHORITY + "/recipe/" + id);
+            return Uri.parse("content://" + AUTHORITY + "/" + Path.RECIPES + "/" + id);
         }
     }
 }

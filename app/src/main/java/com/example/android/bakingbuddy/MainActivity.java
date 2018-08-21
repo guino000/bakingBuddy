@@ -1,21 +1,15 @@
 package com.example.android.bakingbuddy;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.example.android.bakingbuddy.adapters.RecipeAdapter;
@@ -23,18 +17,10 @@ import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
 import com.example.android.bakingbuddy.loaders.RecipeAsyncLoader;
 import com.example.android.bakingbuddy.loaders.RecipeCursorLoader;
 import com.example.android.bakingbuddy.model.Recipe;
-import com.example.android.bakingbuddy.adapters.RecipeFlexibleItem;
-import com.example.android.bakingbuddy.providers.RecipesDatabase;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
-import com.example.android.bakingbuddy.utils.NetworkUtils;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainActivity extends AppCompatActivity implements
         RecipeAdapter.RecipeAdapterOnClickHandler{
@@ -76,9 +62,8 @@ public class MainActivity extends AppCompatActivity implements
             public void processFinish(String output, Loader<String> callerLoader) {
                 if(output == null || output.equals(""))
                     return;
-
 //              Removes old data from database
-//                getContentResolver().delete(RecipesProvider.Recipes.RECIPES, null, null);
+                getContentResolver().delete(RecipesProvider.Recipes.RECIPES, null, null);
 
 //              Insert new data on database
                 ArrayList<Recipe> recipesFromJSON = RecipeDataUtils.getRecipesFromJSON(output);
@@ -127,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> loader = loaderManager.getLoader(ID_RECIPE_CURSOR_LOADER);
         if(loader==null){
-            loaderManager.initLoader(ID_RECIPE_CURSOR_LOADER,null, mRecipeJSONLoaderCallbacks);
+            loaderManager.initLoader(ID_RECIPE_CURSOR_LOADER,null, callbacks);
         }else{
-            loaderManager.restartLoader(ID_RECIPE_CURSOR_LOADER,null,mRecipeJSONLoaderCallbacks);
+            loaderManager.restartLoader(ID_RECIPE_CURSOR_LOADER,null,callbacks);
         }
     }
 
