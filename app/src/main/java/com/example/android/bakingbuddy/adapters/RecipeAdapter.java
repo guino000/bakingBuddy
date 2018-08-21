@@ -44,7 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         View view = inflater.inflate(layoutIdForGridItem, parent, false);
 
-        return new RecipeAdapterViewHolder(parent.getContext(), view);
+        return new RecipeAdapterViewHolder(view);
     }
 
     @Override
@@ -76,10 +76,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         public TextView mRecipeTitleTextView;
         public ImageView mRecipeImageView;
 
-        public RecipeAdapterViewHolder(Context context, View itemView) {
+        public RecipeAdapterViewHolder(View itemView) {
             super(itemView);
             mRecipeTitleTextView = itemView.findViewById(R.id.tv_recipe_name);
             mRecipeImageView = itemView.findViewById(R.id.img_recipe);
+            itemView.setOnClickListener(this);
         }
 
         @Override

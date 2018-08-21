@@ -7,8 +7,11 @@ import android.util.JsonReader;
 import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.providers.IngredientListColumns;
+import com.example.android.bakingbuddy.providers.IngredientsProvider;
 import com.example.android.bakingbuddy.providers.RecipeListColumns;
 import com.example.android.bakingbuddy.providers.RecipesDatabase;
+import com.example.android.bakingbuddy.providers.StepListColumns;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,11 +102,45 @@ public final class RecipeDataUtils {
         ContentValues[] contentValues = new ContentValues[recipeArrayList.size()];
         for(int i = 0; i< recipeArrayList.size(); i++) {
             ContentValues currentValues = new ContentValues();
+            currentValues.put(RecipeListColumns._ID, recipeArrayList.get(i).getId());
             currentValues.put(RecipeListColumns.TITLE, recipeArrayList.get(i).getName());
             currentValues.put(RecipeListColumns.SERVINGS, recipeArrayList.get(i).getServings());
             currentValues.put(RecipeListColumns.IMAGE_URL, recipeArrayList.get(i).getImagePath());
             contentValues[i] = currentValues;
         }
         return contentValues;
+    }
+
+    public static ContentValues[] getIngredientContentValuesFromList(ArrayList<Recipe> recipeArrayList){
+        ArrayList<ContentValues> contentValues = new ArrayList<>();
+        for(int i = 0; i< recipeArrayList.size(); i++) {
+            Ingredient[] ingredients = recipeArrayList.get(i).getIngredients();
+            for (Ingredient ingredient : ingredients) {
+                ContentValues currentValues = new ContentValues();
+                currentValues.put(IngredientListColumns._FK_RECIPE, recipeArrayList.get(i).getId());
+                currentValues.put(IngredientListColumns.INGREDIENT_NAME, ingredient.getIngredientName());
+                currentValues.put(IngredientListColumns.MEASURE, ingredient.getMeasure());
+                currentValues.put(IngredientListColumns.QUANTITY, ingredient.getQuantity());
+                contentValues.add(currentValues);
+            }
+        }
+        return contentValues.toArray(new ContentValues[contentValues.size()]);
+    }
+
+    public static ContentValues[] getCookingStepContentValuesFromList(ArrayList<Recipe> recipeArrayList){
+        ArrayList<ContentValues> contentValues = new ArrayList<>();
+        for(int i = 0; i< recipeArrayList.size(); i++) {
+            CookingStep[] cookingSteps = recipeArrayList.get(i).getSteps();
+            for (CookingStep cookingStep : cookingSteps) {
+                ContentValues currentValues = new ContentValues();
+                currentValues.put(StepListColumns._FK_RECIPE, recipeArrayList.get(i).getId());
+                currentValues.put(StepListColumns.SHORT_DESCRIPTION, cookingStep.getShortDescription());
+                currentValues.put(StepListColumns.DESCRIPTION, cookingStep.getDescription());
+                currentValues.put(StepListColumns.THUMB_URL, cookingStep.getThumbURL());
+                currentValues.put(StepListColumns.VIDEO_URL, cookingStep.getVideoUrl());
+                contentValues.add(currentValues);
+            }
+        }
+        return contentValues.toArray(new ContentValues[contentValues.size()]);
     }
 }

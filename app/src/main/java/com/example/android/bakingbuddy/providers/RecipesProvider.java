@@ -9,7 +9,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 
 @ContentProvider(authority = RecipesProvider.AUTHORITY, database = RecipesDatabase.class)
 public final class RecipesProvider {
-    public static final String AUTHORITY = "com.example.android.bakingbuddy";
+    public static final String AUTHORITY = "com.example.android.bakingbuddy.recipes";
 
     interface Path{
         String RECIPES = "recipes";

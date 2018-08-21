@@ -84,6 +84,9 @@ public class RecipeDetails extends AppCompatActivity {
         };
         mStepsAdapter.addListener(clickListener);
 
+//        Get incoming intent
+//            TODO: Configure recipe details activity to receive recipe ID and transform into a recipe object
+//            TODO: Load mInRecipe with created object
         Intent inIntent = getIntent();
         if(inIntent != null) {
             mInRecipe = inIntent.getParcelableExtra(KEY_INTENT_CLICKED_RECIPE);

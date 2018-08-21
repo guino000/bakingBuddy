@@ -79,6 +79,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+//            TODO: Configure step details fragment to receive recipe ID and get all steps related to it
+//            TODO: Load mSteps with steps from query
             mSteps = getArguments().getParcelableArrayList(ARG_PARAM_STEPS_COLLECTION);
             mCurrentPage = getArguments().getInt(ARG_PARAM_CLICKED_STEP);
         }

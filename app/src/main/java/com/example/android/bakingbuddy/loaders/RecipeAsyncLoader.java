@@ -2,6 +2,7 @@ package com.example.android.bakingbuddy.loaders;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +12,13 @@ import android.support.v4.content.Loader;
 
 import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.providers.IngredientsProvider;
+import com.example.android.bakingbuddy.providers.RecipesProvider;
+import com.example.android.bakingbuddy.providers.StepsProvider;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
+import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeAsyncLoader implements android.support.v4.app.LoaderManager.LoaderCallbacks<String>{
@@ -67,6 +73,22 @@ public class RecipeAsyncLoader implements android.support.v4.app.LoaderManager.L
 
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+        if(data == null || data.equals(""))
+            return;
+//              Removes old data from database
+        mContext.getContentResolver().delete(RecipesProvider.Recipes.RECIPES, null, null);
+        mContext.getContentResolver().delete(StepsProvider.Steps.ALL_STEPS, null, null);
+        mContext.getContentResolver().delete(IngredientsProvider.Ingredients.ALL_INGREDIENTS, null, null);
+//              Insert new data on database
+        ArrayList<Recipe> recipesFromJSON = RecipeDataUtils.getRecipesFromJSON(data);
+        ContentValues[] recipeValues = RecipeDataUtils.getRecipeContentValuesFromList(recipesFromJSON);
+        ContentValues[] ingredientValues = RecipeDataUtils.getIngredientContentValuesFromList(recipesFromJSON);
+        ContentValues[] stepValues = RecipeDataUtils.getCookingStepContentValuesFromList(recipesFromJSON);
+        mContext.getContentResolver().bulkInsert(RecipesProvider.Recipes.RECIPES, recipeValues);
+        for(Recipe recipe : recipesFromJSON) {
+            mContext.getContentResolver().bulkInsert(IngredientsProvider.Ingredients.RECIPE_INGREDIENTS(recipe.getId()), ingredientValues);
+            mContext.getContentResolver().bulkInsert(StepsProvider.Steps.RECIPE_STEPS(recipe.getId()), stepValues);
+        }
         mDelegate.processFinish(data, loader);
     }
 

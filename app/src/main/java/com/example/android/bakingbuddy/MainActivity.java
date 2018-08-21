@@ -17,7 +17,9 @@ import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
 import com.example.android.bakingbuddy.loaders.RecipeAsyncLoader;
 import com.example.android.bakingbuddy.loaders.RecipeCursorLoader;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.providers.IngredientsProvider;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
+import com.example.android.bakingbuddy.providers.StepsProvider;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
 import java.util.ArrayList;
@@ -60,16 +62,6 @@ public class MainActivity extends AppCompatActivity implements
         mRecipeJSONLoaderCallbacks = new RecipeAsyncLoader(this, new AsyncTaskDelegate<String>() {
             @Override
             public void processFinish(String output, Loader<String> callerLoader) {
-                if(output == null || output.equals(""))
-                    return;
-//              Removes old data from database
-                getContentResolver().delete(RecipesProvider.Recipes.RECIPES, null, null);
-
-//              Insert new data on database
-                ArrayList<Recipe> recipesFromJSON = RecipeDataUtils.getRecipesFromJSON(output);
-                ContentValues[] recipeValues = RecipeDataUtils.getRecipeContentValuesFromList(recipesFromJSON);
-                getContentResolver().bulkInsert(RecipesProvider.Recipes.RECIPES, recipeValues);
-
 //                Query new data
                 loadRecipesCursor();
             }
@@ -81,8 +73,7 @@ public class MainActivity extends AppCompatActivity implements
                 mAdapter.swapCursor(output);
             }
         });
-        getSupportLoaderManager().initLoader(ID_RECIPE_JSON_LOADER, null, mRecipeJSONLoaderCallbacks);
-        getSupportLoaderManager().initLoader(ID_RECIPE_CURSOR_LOADER, null, mRecipeCursorLoaderCallbacks);
+
         loadRecipesJSON(getString(R.string.recipes_url));
     }
 
