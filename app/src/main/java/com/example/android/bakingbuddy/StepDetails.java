@@ -109,8 +109,6 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlaybackPosition = 0;
 
 //        Get incoming intent
-//            TODO: Configure step details activity to receive recipe ID and get all steps related to it
-//            TODO: Load mSteps with steps from query
         Intent inIntent = getIntent();
         if(inIntent != null) {
             mSteps =  inIntent.getParcelableArrayListExtra(KEY_INTENT_STEPS_COLLECTION);

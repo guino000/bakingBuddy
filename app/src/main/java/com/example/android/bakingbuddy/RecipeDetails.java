@@ -2,6 +2,8 @@ package com.example.android.bakingbuddy;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,9 @@ import com.example.android.bakingbuddy.adapters.StepFlexibleItem;
 import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.model.Recipe;
+import com.example.android.bakingbuddy.providers.RecipeListColumns;
+import com.example.android.bakingbuddy.providers.RecipesProvider;
+import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
@@ -85,22 +90,26 @@ public class RecipeDetails extends AppCompatActivity {
         mStepsAdapter.addListener(clickListener);
 
 //        Get incoming intent
-//            TODO: Configure recipe details activity to receive recipe ID and transform into a recipe object
-//            TODO: Load mInRecipe with created object
         Intent inIntent = getIntent();
         if(inIntent != null) {
-            mInRecipe = inIntent.getParcelableExtra(KEY_INTENT_CLICKED_RECIPE);
+//            Get Recipe from ID
+            long clickedRecipeID = inIntent.getLongExtra(KEY_INTENT_CLICKED_RECIPE, 0);
+            mInRecipe = RecipeDataUtils.getRecipeObjectFromID(clickedRecipeID, this);
+
+            if (mInRecipe != null) {
 //            Update Ingredients
-            for (Ingredient ingredient : mInRecipe.getIngredients()) {
-                mIngredients.add(new IngredientFlexibleItem(ingredient));
-            }
-            mIngredientsAdapter.updateDataSet(mIngredients);
+                for (Ingredient ingredient : mInRecipe.getIngredients()) {
+                    mIngredients.add(new IngredientFlexibleItem(ingredient));
+                }
+
+                mIngredientsAdapter.updateDataSet(mIngredients);
 
 //            Update Steps
-            for (CookingStep step : mInRecipe.getSteps()) {
-                mSteps.add(new StepFlexibleItem(step));
+                for (CookingStep step : mInRecipe.getSteps()) {
+                    mSteps.add(new StepFlexibleItem(step));
+                }
+                mStepsAdapter.updateDataSet(mSteps);
             }
-            mStepsAdapter.updateDataSet(mSteps);
         }
 
 //        Configure Fragment if is a large view

@@ -82,10 +82,11 @@ public class RecipeAsyncLoader implements android.support.v4.app.LoaderManager.L
 //              Insert new data on database
         ArrayList<Recipe> recipesFromJSON = RecipeDataUtils.getRecipesFromJSON(data);
         ContentValues[] recipeValues = RecipeDataUtils.getRecipeContentValuesFromList(recipesFromJSON);
-        ContentValues[] ingredientValues = RecipeDataUtils.getIngredientContentValuesFromList(recipesFromJSON);
-        ContentValues[] stepValues = RecipeDataUtils.getCookingStepContentValuesFromList(recipesFromJSON);
+
         mContext.getContentResolver().bulkInsert(RecipesProvider.Recipes.RECIPES, recipeValues);
         for(Recipe recipe : recipesFromJSON) {
+            ContentValues[] ingredientValues = RecipeDataUtils.getIngredientContentValuesFromRecipe(recipe);
+            ContentValues[] stepValues = RecipeDataUtils.getCookingStepContentValuesFromRecipe(recipe);
             mContext.getContentResolver().bulkInsert(IngredientsProvider.Ingredients.RECIPE_INGREDIENTS(recipe.getId()), ingredientValues);
             mContext.getContentResolver().bulkInsert(StepsProvider.Steps.RECIPE_STEPS(recipe.getId()), stepValues);
         }

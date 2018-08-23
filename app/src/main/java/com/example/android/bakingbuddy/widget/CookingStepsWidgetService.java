@@ -33,7 +33,6 @@ public class CookingStepsWidgetService extends RemoteViewsService{
         @Override
         public void onCreate() {
 //            TODO: Implement a way of getting the data from source
-//            TODO: Implement content provider? Suggestion: schematic
         }
 
         @Override

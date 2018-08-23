@@ -79,8 +79,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            TODO: Configure step details fragment to receive recipe ID and get all steps related to it
-//            TODO: Load mSteps with steps from query
             mSteps = getArguments().getParcelableArrayList(ARG_PARAM_STEPS_COLLECTION);
             mCurrentPage = getArguments().getInt(ARG_PARAM_CLICKED_STEP);
         }
@@ -131,7 +129,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mPlaybackPosition = savedInstanceState.getLong(KEY_STATE_PLAYBACK_POSITION,0);
         mPlayWhenReady = savedInstanceState.getBoolean(KEY_STATE_PLAY_WHEN_READY, false);
         mCurrentWindow = savedInstanceState.getInt(KEY_STATE_CURRENT_WINDOW, 0);
-//        TODO: Check why the seekto command is not working
+
         if (mPlayer != null) {
             mPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
             mPlayer.setPlayWhenReady(mPlayWhenReady);

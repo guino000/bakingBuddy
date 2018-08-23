@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onClick(int position) {
+    public void onClick(long clickedRecipeID) {
         Intent intent = new Intent(this, RecipeDetails.class);
-        intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, position);
+        intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, clickedRecipeID);
         startActivity(intent);
     }
 }

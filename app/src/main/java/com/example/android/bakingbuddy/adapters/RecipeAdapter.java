@@ -23,7 +23,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     private final RecipeAdapterOnClickHandler mClickHandler;
 
     public interface RecipeAdapterOnClickHandler{
-        void onClick(int position);
+        void onClick(long clickedRecipeID);
     }
 
     public RecipeAdapter(RecipeAdapterOnClickHandler clickHandler){
@@ -85,7 +85,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         @Override
         public void onClick(View v) {
-            mClickHandler.onClick(getAdapterPosition());
+            mClickHandler.onClick(mRecipeCursor.getLong(mRecipeCursor.getColumnIndex(RecipeListColumns._ID)));
         }
     }
 }
