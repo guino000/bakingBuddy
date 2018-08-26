@@ -85,6 +85,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            mRecipeCursor.moveToPosition(position);
             mClickHandler.onClick(mRecipeCursor.getLong(mRecipeCursor.getColumnIndex(RecipeListColumns._ID)));
         }
     }

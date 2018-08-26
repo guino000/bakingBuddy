@@ -1,17 +1,34 @@
 package com.example.android.bakingbuddy.widget;
 
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import com.example.android.bakingbuddy.MainActivity;
+import com.example.android.bakingbuddy.R;
+import com.example.android.bakingbuddy.RecipeDetails;
+import com.example.android.bakingbuddy.model.Ingredient;
+import com.example.android.bakingbuddy.providers.IngredientListColumns;
+import com.example.android.bakingbuddy.providers.IngredientsProvider;
 
 public class IngredientsWidgetService extends RemoteViewsService{
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return null;
+        return new IngredientsRemoteViewsFactory(this.getApplicationContext());
     }
 
     class IngredientsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
+        private Cursor mCursor;
+        private Context mContext;
+        private long mSelectedRecipeID;
 
+        public IngredientsRemoteViewsFactory(Context context){
+            mContext = context;
+        }
 
         @Override
         public void onCreate() {
@@ -20,22 +37,40 @@ public class IngredientsWidgetService extends RemoteViewsService{
 
         @Override
         public void onDataSetChanged() {
-
+            if(mCursor != null) mCursor.close();
+            SharedPreferences preferences = mContext.getSharedPreferences(MainActivity.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+            mSelectedRecipeID = preferences.getLong(MainActivity.KEY_SHARED_PREFS_LAST_VIEWED_RECIPE_ID,0);
+            mCursor = mContext.getContentResolver().query(
+                    IngredientsProvider.Ingredients.RECIPE_INGREDIENTS(mSelectedRecipeID),
+                    null,
+                    null,
+                    null,
+                    null
+            );
         }
 
         @Override
         public void onDestroy() {
-
+            mCursor.close();
         }
 
         @Override
         public int getCount() {
-            return 0;
+            return mCursor.getCount();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            return null;
+            if(mCursor == null || mCursor.getCount() == 0) return null;
+            RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredient_item);
+            mCursor.moveToPosition(position);
+            Ingredient ingredient = new Ingredient(
+                    mCursor.getInt(mCursor.getColumnIndex(IngredientListColumns.QUANTITY)),
+                    mCursor.getString(mCursor.getColumnIndex(IngredientListColumns.MEASURE)),
+                    mCursor.getString(mCursor.getColumnIndex(IngredientListColumns.INGREDIENT_NAME))
+            );
+            remoteViews.setTextViewText(R.id.tv_widget_ingredient_description, ingredient.getIngredientDescription());
+            return remoteViews;
         }
 
         @Override
@@ -45,7 +80,7 @@ public class IngredientsWidgetService extends RemoteViewsService{
 
         @Override
         public int getViewTypeCount() {
-            return 0;
+            return 1;
         }
 
         @Override

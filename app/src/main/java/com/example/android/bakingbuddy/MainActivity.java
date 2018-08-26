@@ -1,7 +1,11 @@
 package com.example.android.bakingbuddy;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -21,13 +25,20 @@ import com.example.android.bakingbuddy.providers.IngredientsProvider;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
 import com.example.android.bakingbuddy.providers.StepsProvider;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
+import com.example.android.bakingbuddy.widget.RecipeWidget;
 
 import java.util.ArrayList;
+
+//TODO: Clean Project and fix layout problems in widget
+//TODO: Check why the first ingredient of widget is not correct
 
 public class MainActivity extends AppCompatActivity implements
         RecipeAdapter.RecipeAdapterOnClickHandler{
     public static final int ID_RECIPE_JSON_LOADER = 11;
     public static final int ID_RECIPE_CURSOR_LOADER = 12;
+
+    public static final String SHARED_PREFS_NAME = "com.example.android.bakingbuddy";
+    public static final String KEY_SHARED_PREFS_LAST_VIEWED_RECIPE_ID = "last_viewed_recipe";
 
     private RecyclerView mRecipeRecyclerView;
     private RecipeAdapter mAdapter;
@@ -111,6 +122,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(long clickedRecipeID) {
+//        Writes to shared preferences the ID of the last clicked recipe
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        preferences.edit()
+                .putLong(KEY_SHARED_PREFS_LAST_VIEWED_RECIPE_ID, clickedRecipeID)
+                .apply();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeWidget.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_widget_ingredients);
+
         Intent intent = new Intent(this, RecipeDetails.class);
         intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, clickedRecipeID);
         startActivity(intent);

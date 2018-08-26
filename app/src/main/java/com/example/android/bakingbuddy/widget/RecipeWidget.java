@@ -1,26 +1,22 @@
 package com.example.android.bakingbuddy.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.bakingbuddy.R;
+import com.example.android.bakingbuddy.RecipeDetails;
+import com.example.android.bakingbuddy.model.Ingredient;
 
-/**
- * Implementation of App Widget functionality.
- * App Widget Configuration implemented in {@link RecipeWidgetConfigureActivity RecipeWidgetConfigureActivity}
- */
 public class RecipeWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
-        CharSequence widgetText = RecipeWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
-
+        RemoteViews views = getIngredientListRemoteView(context);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -33,12 +29,23 @@ public class RecipeWidget extends AppWidgetProvider {
         }
     }
 
+    private static RemoteViews getIngredientListRemoteView(Context context){
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+
+        Intent intent = new Intent(context, IngredientsWidgetService.class);
+        views.setRemoteAdapter(R.id.lv_widget_ingredients,intent);
+
+        Intent appIntent = new Intent(context, RecipeDetails.class);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.lv_widget_ingredients, appPendingIntent);
+
+        views.setEmptyView(R.id.lv_widget_ingredients, R.id.tv_widget_empty);
+        return views;
+    }
+
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
-        for (int appWidgetId : appWidgetIds) {
-            RecipeWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
-        }
     }
 
     @Override

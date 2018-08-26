@@ -32,11 +32,6 @@
         <service android:name=".widget.IngredientsWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <activity android:name=".widget.RecipeWidgetConfigureActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
         <provider
             android:authorities="com.example.android.bakingbuddy.recipes"
             android:name=".providers.generated.RecipesProvider"
@@ -44,7 +39,7 @@
         <provider
             android:authorities="com.example.android.bakingbuddy.ingredients"
             android:name=".providers.generated.IngredientsProvider"
-            android:exported="false"/>
+            android:exported="true"/>
         <provider
             android:authorities="com.example.android.bakingbuddy.steps"
             android:name=".providers.generated.StepsProvider"
