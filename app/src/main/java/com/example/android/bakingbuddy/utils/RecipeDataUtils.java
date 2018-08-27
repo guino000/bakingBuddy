@@ -176,7 +176,6 @@ public final class RecipeDataUtils {
                 null,
                 null)){
             if (cursor != null) {
-                cursor.moveToFirst();
                 while(cursor.moveToNext()){
                     cookingSteps.add(new CookingStep(
                             cursor.getInt(cursor.getColumnIndex(StepListColumns._ID)),
@@ -204,7 +203,6 @@ public final class RecipeDataUtils {
                 null,
                 null)){
             if (cursor != null) {
-                cursor.moveToFirst();
                 while(cursor.moveToNext()){
                     ingredients.add(new Ingredient(
                             cursor.getInt(cursor.getColumnIndex(IngredientListColumns.QUANTITY)),

@@ -16,7 +16,9 @@
     <string name="button_text_previous">Previous</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
+
+    <!--Strings for widget-->
+    <string name="appwidget_text">Baking Buddy</string>
     <string name="add_widget">Add widget</string>
+    <string name="widget_empty_text_view">Empty</string>
 </resources>

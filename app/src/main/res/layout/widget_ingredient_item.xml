@@ -3,5 +3,6 @@
     android:id="@+id/tv_widget_ingredient_description"
     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
     android:textColor="@color/primaryTextColor"
+    android:layout_margin="8dp"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"/>

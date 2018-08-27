@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
 import com.example.android.bakingbuddy.model.CookingStep;
+import com.example.android.bakingbuddy.providers.RecipeListColumns;
 import com.example.android.bakingbuddy.providers.StepListColumns;
 import com.squareup.picasso.Picasso;
 
@@ -64,6 +65,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
         public StepAdapterViewHolder(Context context, View itemView) {
             super(itemView);
             mShortDescriptionTextView = itemView.findViewById(R.id.tv_step_short_description);
+            itemView.setOnClickListener(this);
         }
 
         @Override

@@ -30,7 +30,6 @@ import com.example.android.bakingbuddy.widget.RecipeWidget;
 import java.util.ArrayList;
 
 //TODO: Clean Project and fix layout problems in widget
-//TODO: Check why the first ingredient of widget is not correct
 
 public class MainActivity extends AppCompatActivity implements
         RecipeAdapter.RecipeAdapterOnClickHandler{
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
     public void loadRecipesCursor(){
         LoaderManager.LoaderCallbacks callbacks = mRecipeCursorLoaderCallbacks;
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> loader = loaderManager.getLoader(ID_RECIPE_CURSOR_LOADER);
+        Loader<Cursor> loader = loaderManager.getLoader(ID_RECIPE_CURSOR_LOADER);
         if(loader==null){
             loaderManager.initLoader(ID_RECIPE_CURSOR_LOADER,null, callbacks);
         }else{

@@ -17,14 +17,8 @@ import com.squareup.picasso.Picasso;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder>{
     private Cursor mIngredientCursor;
-    private final IngredientAdapter.IngredientAdapterOnClickHandler mClickHandler;
 
-    public interface IngredientAdapterOnClickHandler{
-        void onClick(int position);
-    }
-
-    public IngredientAdapter(IngredientAdapter.IngredientAdapterOnClickHandler clickHandler){
-        mClickHandler = clickHandler;
+    public IngredientAdapter(){
     }
 
     public void swapCursor(Cursor newCursor){
