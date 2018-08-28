@@ -14,7 +14,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.android.bakingbuddy.adapters.RecipeAdapter;
 import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
@@ -24,6 +27,7 @@ import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.providers.IngredientsProvider;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
 import com.example.android.bakingbuddy.providers.StepsProvider;
+import com.example.android.bakingbuddy.utils.NetworkUtils;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 import com.example.android.bakingbuddy.widget.RecipeWidget;
 
@@ -43,12 +47,16 @@ public class MainActivity extends AppCompatActivity implements
     private RecipeAdapter mAdapter;
     private RecipeAsyncLoader mRecipeJSONLoaderCallbacks;
     private RecipeCursorLoader mRecipeCursorLoaderCallbacks;
+    private ProgressBar mProgressBar;
+    private TextView mErrorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        Initialize recycler view
+        mProgressBar = findViewById(R.id.pb_main_activity);
+        mErrorTextView = findViewById(R.id.tv_error_msg_main_activity);
         mRecipeRecyclerView = findViewById(R.id.rv_recipes);
         mAdapter = new RecipeAdapter(this);
         mRecipeRecyclerView.setAdapter(mAdapter);
@@ -80,7 +88,11 @@ public class MainActivity extends AppCompatActivity implements
         mRecipeCursorLoaderCallbacks = new RecipeCursorLoader(this, mAdapter, new AsyncTaskDelegate<Cursor>() {
             @Override
             public void processFinish(Cursor output, Loader<Cursor> callerLoader) {
+                setProgressBarVisible(false);
                 mAdapter.swapCursor(output);
+                if (!(output.moveToFirst()) || output.getCount() == 0){
+                    setErrorMessageVisible(true);
+                }
             }
         });
 
@@ -95,6 +107,12 @@ public class MainActivity extends AppCompatActivity implements
 
 //    Function to load recipes from WEB
     public void loadRecipesJSON(String url){
+        if(!NetworkUtils.isOnline(this)){
+            setErrorMessageVisible(true);
+            return;
+        }
+        setProgressBarVisible(true);
+        setErrorMessageVisible(false);
         LoaderManager.LoaderCallbacks callbacks = mRecipeJSONLoaderCallbacks;
         Bundle queryBundle = new Bundle();
         queryBundle.putString(RecipeAsyncLoader.KEY_ARG_CONTENT_URL, url);
@@ -133,5 +151,26 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, RecipeDetails.class);
         intent.putExtra(RecipeDetails.KEY_INTENT_CLICKED_RECIPE, clickedRecipeID);
         startActivity(intent);
+    }
+
+//    Control UI widgets
+    private void setErrorMessageVisible(boolean visible){
+        if (visible){
+            mRecipeRecyclerView.setVisibility(View.INVISIBLE);
+            mErrorTextView.setVisibility(View.VISIBLE);
+        }else{
+            mRecipeRecyclerView.setVisibility(View.VISIBLE);
+            mErrorTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setProgressBarVisible(boolean visible){
+        if (visible){
+            mRecipeRecyclerView.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
+        }else{
+            mRecipeRecyclerView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 }

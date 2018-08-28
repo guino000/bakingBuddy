@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
@@ -10,17 +9,18 @@
         android:id="@+id/tv_widget_ingredients_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textColor="@color/primaryTextColor"
         android:contentDescription="@string/ingredients_label"
+        android:layout_margin="8dp"
         android:text="@string/ingredients_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/primaryTextColor" />
 
     <ListView
         android:id="@+id/lv_widget_ingredients"
-        style="@style/Widget.AppCompat.ListView.Menu"
+        style="@android:style/Widget.DeviceDefault.Light.ListView"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_widget_empty"
