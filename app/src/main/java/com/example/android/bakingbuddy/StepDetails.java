@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -139,8 +140,10 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlaybackPosition = savedInstanceState.getLong(KEY_STATE_PLAYBACK_POSITION);
         mPlayWhenReady = savedInstanceState.getBoolean(KEY_STATE_PLAY_WHEN_READY);
         mCurrentWindow = savedInstanceState.getInt(KEY_STATE_CURRENT_WINDOW);
-        mPlayer.seekTo(mPlaybackPosition);
-        mPlayer.setPlayWhenReady(mPlayWhenReady);
+        if(mPlayer != null) {
+            mPlayer.seekTo(mPlaybackPosition);
+            mPlayer.setPlayWhenReady(mPlayWhenReady);
+        }
     }
 
     private void updateUiCurrentStep(CookingStep currentStep){
@@ -179,7 +182,8 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
         mPlayerView.setPlayer(mPlayer);
         mPlayer.setPlayWhenReady(mPlayWhenReady);
         mPlayer.seekTo(mCurrentWindow,mPlaybackPosition);
-
+        mPlayerView.showController();
+        mPlayerView.getVideoSurfaceView().setBackgroundResource(0);
         Uri uri = Uri.parse(contentURL);
         MediaSource mediaSource = buildMediaSource(uri);
         mPlayer.prepare(mediaSource,true,false);
@@ -223,7 +227,8 @@ public class StepDetails extends AppCompatActivity implements ExoPlayer.EventLis
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mPlayer.release();
             mPlayer = null;
-            mPlayerView.getVideoSurfaceView().setVisibility(View.GONE);
+            mPlayerView.getVideoSurfaceView().setBackgroundResource(R.drawable.video_placeholder);
+            mPlayerView.hideController();
         }
     }
 
