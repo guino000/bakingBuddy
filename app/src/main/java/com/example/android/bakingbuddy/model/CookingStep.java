@@ -3,8 +3,6 @@ package com.example.android.bakingbuddy.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.net.URL;
-
 public class CookingStep implements Parcelable{
     private int mID;
     private String mShortDescription;
@@ -39,10 +37,6 @@ public class CookingStep implements Parcelable{
             return new CookingStep[size];
         }
     };
-
-    public int getID() {
-        return mID;
-    }
 
     public String getShortDescription() {
         return mShortDescription;

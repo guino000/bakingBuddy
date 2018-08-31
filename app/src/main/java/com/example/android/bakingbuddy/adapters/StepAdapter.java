@@ -7,14 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
-import com.example.android.bakingbuddy.model.CookingStep;
-import com.example.android.bakingbuddy.providers.RecipeListColumns;
 import com.example.android.bakingbuddy.providers.StepListColumns;
-import com.squareup.picasso.Picasso;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder>{
     private Cursor mStepCursor;

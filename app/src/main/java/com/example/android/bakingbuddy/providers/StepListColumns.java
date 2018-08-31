@@ -1,7 +1,5 @@
 package com.example.android.bakingbuddy.providers;
 
-import android.support.annotation.NonNull;
-
 import net.simonvt.schematic.annotation.AutoIncrement;
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.ExecOnCreate;
@@ -11,6 +9,7 @@ import net.simonvt.schematic.annotation.References;
 import static net.simonvt.schematic.annotation.DataType.Type.INTEGER;
 import static net.simonvt.schematic.annotation.DataType.Type.TEXT;
 
+@SuppressWarnings("ALL")
 public interface StepListColumns {
     @DataType(INTEGER) @PrimaryKey
     @AutoIncrement

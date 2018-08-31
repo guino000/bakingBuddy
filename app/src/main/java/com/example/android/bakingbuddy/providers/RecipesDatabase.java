@@ -1,7 +1,6 @@
 package com.example.android.bakingbuddy.providers;
 
 import net.simonvt.schematic.annotation.Database;
-import net.simonvt.schematic.annotation.OnCreate;
 import net.simonvt.schematic.annotation.Table;
 
 @Database(version = RecipesDatabase.VERSION)

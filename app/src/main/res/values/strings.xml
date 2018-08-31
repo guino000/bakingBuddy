@@ -1,6 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Baking Buddy</string>
     <string name="recipes_url">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
+    <string name="main_activity_error">An error has occurred. Please check internet connection.</string>
     <!--Strings for Recipe Miniature-->
     <string name="recipe_miniature_dummy_name">Recipe</string>
     <string name="recipe_image_description">A picture of the recipe</string>
@@ -14,11 +15,8 @@
     <!--String for step detail activity-->
     <string name="button_text_next">Next</string>
     <string name="button_text_previous">Previous</string>
-    <string name="title_item_list">Items</string>
-    <string name="title_item_detail">Item Detail</string>
 
     <!--Strings for widget-->
-    <string name="appwidget_text">Baking Buddy</string>
-    <string name="add_widget">Add widget</string>
+    <string name="appwidget_text" tools:keep="@string/appwidget_text">Baking Buddy</string>
     <string name="widget_empty_text_view">Empty</string>
 </resources>

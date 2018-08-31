@@ -2,7 +2,6 @@ package com.example.android.bakingbuddy;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,22 +22,15 @@ import com.example.android.bakingbuddy.adapters.RecipeAdapter;
 import com.example.android.bakingbuddy.interfaces.AsyncTaskDelegate;
 import com.example.android.bakingbuddy.loaders.RecipeAsyncLoader;
 import com.example.android.bakingbuddy.loaders.RecipeCursorLoader;
-import com.example.android.bakingbuddy.model.Recipe;
-import com.example.android.bakingbuddy.providers.IngredientsProvider;
-import com.example.android.bakingbuddy.providers.RecipesProvider;
-import com.example.android.bakingbuddy.providers.StepsProvider;
 import com.example.android.bakingbuddy.utils.NetworkUtils;
-import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 import com.example.android.bakingbuddy.widget.RecipeWidget;
-
-import java.util.ArrayList;
 
 //TODO: Clean Project and fix layout problems in widget
 
 public class MainActivity extends AppCompatActivity implements
         RecipeAdapter.RecipeAdapterOnClickHandler{
-    public static final int ID_RECIPE_JSON_LOADER = 11;
-    public static final int ID_RECIPE_CURSOR_LOADER = 12;
+    private static final int ID_RECIPE_JSON_LOADER = 11;
+    private static final int ID_RECIPE_CURSOR_LOADER = 12;
 
     public static final String SHARED_PREFS_NAME = "com.example.android.bakingbuddy";
     public static final String KEY_SHARED_PREFS_LAST_VIEWED_RECIPE_ID = "last_viewed_recipe";
@@ -106,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 //    Function to load recipes from WEB
-    public void loadRecipesJSON(String url){
+private void loadRecipesJSON(String url){
         if(!NetworkUtils.isOnline(this)){
             setErrorMessageVisible(true);
             return;
@@ -119,14 +111,14 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> loader = loaderManager.getLoader(ID_RECIPE_JSON_LOADER);
         if(loader==null){
-            loaderManager.initLoader(ID_RECIPE_JSON_LOADER,queryBundle, mRecipeJSONLoaderCallbacks);
+            loaderManager.initLoader(ID_RECIPE_JSON_LOADER,queryBundle, callbacks);
         }else{
-            loaderManager.restartLoader(ID_RECIPE_JSON_LOADER,queryBundle,mRecipeJSONLoaderCallbacks);
+            loaderManager.restartLoader(ID_RECIPE_JSON_LOADER,queryBundle,callbacks);
         }
     }
 
     //    Function to load recipes from Database
-    public void loadRecipesCursor(){
+    private void loadRecipesCursor(){
         LoaderManager.LoaderCallbacks callbacks = mRecipeCursorLoaderCallbacks;
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<Cursor> loader = loaderManager.getLoader(ID_RECIPE_CURSOR_LOADER);

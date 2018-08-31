@@ -1,6 +1,5 @@
 package com.example.android.bakingbuddy.interfaces;
 
-import android.database.Cursor;
 import android.support.v4.content.Loader;
 
 /***************************************************************************************
@@ -11,6 +10,7 @@ import android.support.v4.content.Loader;
  *    Availability: https://gist.github.com/dhiegoabrantes/7933078edf4ccb05f2de2bf3fca17ed0
  ***************************************************************************************/
 
+@SuppressWarnings("ALL")
 public interface AsyncTaskDelegate<T> {
     void processFinish(T output, Loader<T> callerLoader);
 }

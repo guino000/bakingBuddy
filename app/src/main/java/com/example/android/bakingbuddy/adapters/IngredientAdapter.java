@@ -7,13 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.providers.IngredientListColumns;
-import com.squareup.picasso.Picasso;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder>{
     private Cursor mIngredientCursor;

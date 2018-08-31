@@ -3,7 +3,6 @@ package com.example.android.bakingbuddy.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.JsonReader;
 
 import com.example.android.bakingbuddy.model.CookingStep;
 import com.example.android.bakingbuddy.model.Ingredient;
@@ -11,7 +10,6 @@ import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.providers.IngredientListColumns;
 import com.example.android.bakingbuddy.providers.IngredientsProvider;
 import com.example.android.bakingbuddy.providers.RecipeListColumns;
-import com.example.android.bakingbuddy.providers.RecipesDatabase;
 import com.example.android.bakingbuddy.providers.RecipesProvider;
 import com.example.android.bakingbuddy.providers.StepListColumns;
 import com.example.android.bakingbuddy.providers.StepsProvider;
@@ -168,7 +166,7 @@ public final class RecipeDataUtils {
         }
     }
 
-    public static CookingStep[] getStepsFromRecipeID(long id, Context context){
+    private static CookingStep[] getStepsFromRecipeID(long id, Context context){
         ArrayList<CookingStep> cookingSteps = new ArrayList<>();
         try(Cursor cursor = context.getContentResolver().query(StepsProvider.Steps.RECIPE_STEPS(id),
                 null,
@@ -195,7 +193,7 @@ public final class RecipeDataUtils {
         }
     }
 
-    public static Ingredient[] getIngredientsFromRecipeID(long id, Context context){
+    private static Ingredient[] getIngredientsFromRecipeID(long id, Context context){
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         try(Cursor cursor = context.getContentResolver().query(IngredientsProvider.Ingredients.RECIPE_INGREDIENTS(id),
                 null,

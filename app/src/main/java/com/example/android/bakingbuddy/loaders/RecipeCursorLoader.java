@@ -1,7 +1,6 @@
 package com.example.android.bakingbuddy.loaders;
 
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ public class RecipeCursorLoader implements android.support.v4.app.LoaderManager.
         mAdapter = adapter;
     }
 
+    @NonNull
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri contentUri;

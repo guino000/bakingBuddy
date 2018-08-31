@@ -1,7 +1,6 @@
 package com.example.android.bakingbuddy.loaders;
 
 import android.annotation.SuppressLint;
-import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import com.example.android.bakingbuddy.utils.NetworkUtils;
 import com.example.android.bakingbuddy.utils.RecipeDataUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeAsyncLoader implements android.support.v4.app.LoaderManager.LoaderCallbacks<String>{
     public static final String KEY_ARG_CONTENT_URL = "content_url";
@@ -55,8 +53,7 @@ public class RecipeAsyncLoader implements android.support.v4.app.LoaderManager.L
                 if(args == null) return "";
                 String contentUrl = args.getString(KEY_ARG_CONTENT_URL);
                 try {
-                    String response = NetworkUtils.getResponseFromHttpUrl(contentUrl);
-                    return response;
+                    return NetworkUtils.getResponseFromHttpUrl(contentUrl);
                 }catch (Exception e){
                     e.printStackTrace();
                     return "";

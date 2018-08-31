@@ -9,12 +9,11 @@ import android.widget.RemoteViews;
 
 import com.example.android.bakingbuddy.R;
 import com.example.android.bakingbuddy.RecipeDetails;
-import com.example.android.bakingbuddy.model.Ingredient;
 
 public class RecipeWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
         // Construct the RemoteViews object
         RemoteViews views = getIngredientListRemoteView(context);
         // Instruct the widget manager to update the widget

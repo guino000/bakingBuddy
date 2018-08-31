@@ -1,6 +1,5 @@
 package com.example.android.bakingbuddy.widget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +9,6 @@ import android.widget.RemoteViewsService;
 
 import com.example.android.bakingbuddy.MainActivity;
 import com.example.android.bakingbuddy.R;
-import com.example.android.bakingbuddy.RecipeDetails;
 import com.example.android.bakingbuddy.model.Ingredient;
 import com.example.android.bakingbuddy.providers.IngredientListColumns;
 import com.example.android.bakingbuddy.providers.IngredientsProvider;

@@ -11,12 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingbuddy.R;
-import com.example.android.bakingbuddy.model.Recipe;
 import com.example.android.bakingbuddy.providers.RecipeListColumns;
-import com.example.android.bakingbuddy.providers.RecipesDatabase;
 import com.squareup.picasso.Picasso;
-
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder>{
     private Cursor mRecipeCursor;

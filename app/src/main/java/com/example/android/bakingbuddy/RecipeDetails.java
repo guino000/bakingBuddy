@@ -25,12 +25,11 @@ public class RecipeDetails extends AppCompatActivity {
 
     private static final String TAG = RecipeDetails.class.getSimpleName();
 
-    public  static final int ID_INGREDIENTS_CURSOR_LOADER = 21;
-    public  static final int ID_STEPS_CURSOR_LOADER = 22;
+    private static final int ID_INGREDIENTS_CURSOR_LOADER = 21;
+    private static final int ID_STEPS_CURSOR_LOADER = 22;
 
     public static final String KEY_INTENT_CLICKED_RECIPE = "clicked_recipe";
 
-    private Recipe mInRecipe;
     private RecyclerView mIngredientsRecyclerView;
     private IngredientAdapter mIngredientsAdapter;
     private RecyclerView mStepsRecyclerView;
@@ -45,7 +44,6 @@ public class RecipeDetails extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_details);
 
         //        Get incoming intent
-//        TODO: Replace DB query for something else that does not run on the main thread
         final Intent inIntent = getIntent();
         long clickedRecipeID = inIntent.getLongExtra(KEY_INTENT_CLICKED_RECIPE, 0);
         final Recipe inRecipe = RecipeDataUtils.getRecipeObjectFromID(clickedRecipeID, this);

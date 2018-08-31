@@ -11,11 +11,10 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         tools:text="@string/ingredient_miniature_dummy_name"/>
 
     <View
-        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"

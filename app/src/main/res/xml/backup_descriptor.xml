@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TODO Remove the following "exclude" elements to make them a part of the auto backup -->
+    <exclude
+        domain="database"
+        path="recipesDatabase.db" />
+    <exclude
+        domain="database"
+        path="ingredientsDatabase.db" />
+    <exclude
+        domain="database"
+        path="stepsDatabase.db" />
+    <!-- Exclude the shared preferences file that contains the GCM registrationId -->
+    <exclude
+        domain="sharedpref"
+        path="com.example.android.bakingbuddy.xml" />
+</full-backup-content>
